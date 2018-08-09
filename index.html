@@ -14085,9 +14085,25 @@ var _user$project$Main$update = F2(
 	});
 var _user$project$Main$init = {
 	ctor: '_Tuple2',
-	_0: {message: 'coucou'},
+	_0: {message: 'hoho'},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
+var _user$project$Main$create = _rtfeldman$elm_css$Css$batch(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$absolute),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$right(
+				_rtfeldman$elm_css$Css$px(16)),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$top(
+					_rtfeldman$elm_css$Css$px(32)),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
 var _user$project$Main$tagline = _rtfeldman$elm_css$Css$batch(
 	{
 		ctor: '::',
@@ -14132,6 +14148,73 @@ var _user$project$Main$title = _rtfeldman$elm_css$Css$batch(
 					_rtfeldman$elm_css$Css$px(0)),
 				_1: {ctor: '[]'}
 			}
+		}
+	});
+var _user$project$Main$subheader = _rtfeldman$elm_css$Css$batch(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$relative),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$padding(
+				_rtfeldman$elm_css$Css$px(6)),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$height(
+					_rtfeldman$elm_css$Css$px(36)),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _user$project$Main$subbandeau = A2(
+	_rtfeldman$elm_css$Html_Styled$div,
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+			{
+				ctor: '::',
+				_0: _user$project$Main$subheader,
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_rtfeldman$elm_css$Html_Styled$h2,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled$text('Mes listes'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$span,
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+						{
+							ctor: '::',
+							_0: _user$project$Main$create,
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$button,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled$text('Créer liste'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
 		}
 	});
 var _user$project$Main$header = _rtfeldman$elm_css$Css$batch(
@@ -14262,14 +14345,7 @@ var _user$project$Main$view = function (model) {
 			_0: _user$project$Main$bandeau,
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$div,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled$text(model.message),
-						_1: {ctor: '[]'}
-					}),
+				_0: _user$project$Main$subbandeau,
 				_1: {ctor: '[]'}
 			}
 		});

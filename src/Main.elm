@@ -1,6 +1,6 @@
 import Css exposing (..)
 import Html
-import Html.Styled exposing (div, h1, text, toUnstyled, Html, span)
+import Html.Styled exposing (div, h1, h2, text, toUnstyled, Html, span, button)
 import Html.Styled.Attributes exposing (css)
 
 content : Style
@@ -19,6 +19,14 @@ header =
         ,   padding (px 6)
         ,   height (px 36)
         ,   backgroundColor (rgb 96 181 204)
+        ]
+
+subheader : Style
+subheader =
+    Css.batch
+        [   position relative
+        ,   padding (px 6)
+        ,   height (px 36)
         ]
 
 title : Style
@@ -40,6 +48,14 @@ tagline =
         ,   fontStyle italic
         ]
 
+create : Style
+create =
+    Css.batch
+        [   position absolute
+        ,   right (px 16)
+        ,   top (px 32)
+        ]
+
 type alias Model =
     { message : String
 
@@ -50,7 +66,7 @@ type Msg =
 
 init : (Model, Cmd Msg)
 init =
-    ({ message = "coucou"}, Cmd.none)
+    ({ message = "hoho"}, Cmd.none)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -61,8 +77,15 @@ update msg model =
 bandeau : Html msg
 bandeau =
     div [ css [ header ] ] 
-        [   h1 [ css [ title ] ] [ text "MyThoughts" ]
-        ,   span [ css [ tagline ] ] [ text "Pour mettre de côté mes liens utiles" ]
+        [ h1 [ css [ title ] ] [ text "MyThoughts" ]
+        , span [ css [ tagline ] ] [ text "Pour mettre de côté mes liens utiles" ]
+        ]
+
+subbandeau : Html msg
+subbandeau =
+    div [ css [ subheader ]]
+        [  h2 [] [ text "Mes listes" ]
+        ,  span [ css [ create ] ] [ button [] [ text "Créer liste" ] ]
         ]
 
 view : Model -> (Html Msg)
@@ -70,10 +93,7 @@ view model =
     div [ css [ content ] ]
         [
             bandeau
-        ,   div []
-                [ text model.message
-
-                ]
+        ,   subbandeau
         ]
 
 main =

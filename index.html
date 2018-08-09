@@ -14078,6 +14078,30 @@ var _rtfeldman$elm_css$Html_Styled_Attributes$style = function (_p0) {
 	return _rtfeldman$elm_css$Html_Styled_Attributes$fromUnstyled(
 		_elm_lang$virtual_dom$VirtualDom$style(_p0));
 };
+var _user$project$Main$renderNumberLinks = function (links) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		' ( ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(
+				_elm_lang$core$List$length(links)),
+			' )'));
+};
+var _user$project$Main$renderCategory = function (category) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$span,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Html_Styled$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					category.name,
+					_user$project$Main$renderNumberLinks(category.links))),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
@@ -14085,7 +14109,16 @@ var _user$project$Main$update = F2(
 	});
 var _user$project$Main$init = {
 	ctor: '_Tuple2',
-	_0: {message: 'hoho'},
+	_0: {
+		categories: {
+			ctor: '::',
+			_0: {
+				name: 'Developpement',
+				links: {ctor: '[]'}
+			},
+			_1: {ctor: '[]'}
+		}
+	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
 var _user$project$Main$create = _rtfeldman$elm_css$Css$batch(
@@ -14150,6 +14183,49 @@ var _user$project$Main$title = _rtfeldman$elm_css$Css$batch(
 			}
 		}
 	});
+var _user$project$Main$listCategories = _rtfeldman$elm_css$Css$batch(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$paddingTop(
+			_rtfeldman$elm_css$Css$px(50)),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Main$categories = function (categories) {
+	var _p1 = _elm_lang$core$List$length(categories);
+	if (_p1 === 0) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+					{
+						ctor: '::',
+						_0: _user$project$Main$listCategories,
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled$text('Liste désespéremment vide...'),
+				_1: {ctor: '[]'}
+			});
+	} else {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+					{
+						ctor: '::',
+						_0: _user$project$Main$listCategories,
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			},
+			A2(_elm_lang$core$List$map, _user$project$Main$renderCategory, categories));
+	}
+};
 var _user$project$Main$subheader = _rtfeldman$elm_css$Css$batch(
 	{
 		ctor: '::',
@@ -14185,7 +14261,7 @@ var _user$project$Main$subbandeau = A2(
 			{ctor: '[]'},
 			{
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled$text('Mes listes'),
+				_0: _rtfeldman$elm_css$Html_Styled$text('Mes catégories'),
 				_1: {ctor: '[]'}
 			}),
 		_1: {
@@ -14209,7 +14285,7 @@ var _user$project$Main$subbandeau = A2(
 						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled$text('Créer liste'),
+							_0: _rtfeldman$elm_css$Html_Styled$text('Créer catégorie'),
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
@@ -14346,25 +14422,33 @@ var _user$project$Main$view = function (model) {
 			_1: {
 				ctor: '::',
 				_0: _user$project$Main$subbandeau,
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$categories(model.categories),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{
 		init: _user$project$Main$init,
-		view: function (_p1) {
+		view: function (_p2) {
 			return _rtfeldman$elm_css$Html_Styled$toUnstyled(
-				_user$project$Main$view(_p1));
+				_user$project$Main$view(_p2));
 		},
 		update: _user$project$Main$update,
-		subscriptions: function (_p2) {
+		subscriptions: function (_p3) {
 			return _elm_lang$core$Platform_Sub$none;
 		}
 	})();
 var _user$project$Main$Model = function (a) {
-	return {message: a};
+	return {categories: a};
 };
+var _user$project$Main$Category = F2(
+	function (a, b) {
+		return {name: a, links: b};
+	});
 var _user$project$Main$NoOp = {ctor: 'NoOp'};
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};

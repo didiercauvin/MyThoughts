@@ -29,6 +29,12 @@ subheader =
         ,   height (px 36)
         ]
 
+listCategories : Style
+listCategories =
+    Css.batch
+        [ paddingTop (px 50)
+        ]
+
 title : Style
 title =
     Css.batch
@@ -57,16 +63,22 @@ create =
         ]
 
 type alias Model =
-    { message : String
-
+    { categories : List Category
     }
+
+type alias Category =
+    { name : String
+    , links : List Link
+    }
+
+type alias Link = String
 
 type Msg =
     NoOp
 
 init : (Model, Cmd Msg)
 init =
-    ({ message = "hoho"}, Cmd.none)
+    ({ categories = [{name = "Developpement", links = []}] }, Cmd.none)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -84,17 +96,33 @@ bandeau =
 subbandeau : Html msg
 subbandeau =
     div [ css [ subheader ]]
-        [  h2 [] [ text "Mes listes" ]
-        ,  span [ css [ create ] ] [ button [] [ text "Créer liste" ] ]
+        [  h2 [] [ text "Mes catégories" ]
+        ,  span [ css [ create ] ] [ button [] [ text "Créer catégorie" ] ]
         ]
+
+categories : List Category -> Html Msg
+categories categories =
+    case List.length categories of
+        0 ->
+            div [ css [ listCategories ] ] [ text "Liste désespéremment vide..." ]
+        _ ->
+            div [ css [ listCategories ] ] (List.map renderCategory categories)
 
 view : Model -> (Html Msg)
 view model =
     div [ css [ content ] ]
-        [
-            bandeau
-        ,   subbandeau
+        [ bandeau
+        , subbandeau
+        , categories model.categories
         ]
+
+renderCategory : Category -> (Html Msg)
+renderCategory category =
+    span [] [ text (category.name ++ renderNumberLinks category.links) ]
+
+renderNumberLinks : List Link -> String
+renderNumberLinks links =
+     " ( " ++ toString (List.length links) ++ " )"
 
 main =
     Html.program

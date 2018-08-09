@@ -14094,11 +14094,22 @@ var _user$project$Main$renderCategory = function (category) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _rtfeldman$elm_css$Html_Styled$text(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					category.name,
-					_user$project$Main$renderNumberLinks(category.links))),
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$a,
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled_Attributes$href(category.name),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							category.name,
+							_user$project$Main$renderNumberLinks(category.links))),
+					_1: {ctor: '[]'}
+				}),
 			_1: {ctor: '[]'}
 		});
 };

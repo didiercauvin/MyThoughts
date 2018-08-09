@@ -1,7 +1,7 @@
 import Css exposing (..)
 import Html
-import Html.Styled exposing (div, h1, h2, text, toUnstyled, Html, span, button)
-import Html.Styled.Attributes exposing (css)
+import Html.Styled exposing (div, h1, h2, text, toUnstyled, Html, span, button, a)
+import Html.Styled.Attributes exposing (css, href)
 
 content : Style
 content =
@@ -118,7 +118,11 @@ view model =
 
 renderCategory : Category -> (Html Msg)
 renderCategory category =
-    span [] [ text (category.name ++ renderNumberLinks category.links) ]
+    span [] 
+         [ a [ href category.name ]
+             [ text (category.name ++ renderNumberLinks category.links) 
+             ]
+         ]
 
 renderNumberLinks : List Link -> String
 renderNumberLinks links =

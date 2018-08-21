@@ -1,7 +1,8 @@
 import Css exposing (..)
 import Html
-import Html.Styled exposing (div, h1, h2, text, toUnstyled, Html, span, button, a)
-import Html.Styled.Attributes exposing (css, href)
+import Html.Styled.Events exposing (onClick, onInput)
+import Html.Styled exposing (input, div, h1, h2, text, toUnstyled, Html, span, button, a, node, header, footer, section, p)
+import Html.Styled.Attributes exposing (css, href, rel, class, attribute, placeholder)
 
 content : Style
 content =
@@ -12,8 +13,8 @@ content =
         ,   fontFamilies [ "Helvetica", "Arial", "serif" ]
         ]
 
-header : Style
-header =    
+mainHeader : Style
+mainHeader =    
     Css.batch
         [   position relative
         ,   padding (px 6)
@@ -62,8 +63,17 @@ create =
         ,   top (px 32)
         ]
 
+addCss : String -> Html msg
+addCss path =
+    node "link" [ rel "stylesheet", href path] []
+
+bulma =
+    addCss "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css"
+
 type alias Model =
     { categories : List Category
+    , currentCategory : Maybe Category
+    , isPopUpActive : Bool
     }
 
 type alias Category =
@@ -73,31 +83,50 @@ type alias Category =
 
 type alias Link = String
 
-type Msg =
-    NoOp
+type Msg 
+    = TogglePopup
+    | EditCategoryName String
+    | NewCategory
 
 init : (Model, Cmd Msg)
 init =
-    ({ categories = [{name = "Developpement", links = []}] }, Cmd.none)
+    ({ categories = [{name = "Developpement", links = []}], isPopUpActive = False, currentCategory = Nothing }, Cmd.none)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        NoOp ->
-            (model, Cmd.none)
+        TogglePopup ->
+            ( { model | isPopUpActive = not model.isPopUpActive }, Cmd.none)
+        EditCategoryName name ->
+            ( { model | currentCategory = 
+                            case model.currentCategory of
+                                Just currentCategory ->
+                                    Just { currentCategory | name = name }
+                                Nothing ->
+                                    Just { name = name, links = [] }           
+            }, Cmd.none )
+        NewCategory ->
+            ( { model | categories = case model.currentCategory of
+                                        Just currentCategory ->
+                                            currentCategory :: model.categories
+                                        Nothing ->
+                                            model.categories
+                      , currentCategory = Nothing
+                      , isPopUpActive = False
+             }, Cmd.none ) 
 
 bandeau : Html msg
 bandeau =
-    div [ css [ header ] ] 
+    div [ css [ mainHeader ] ] 
         [ h1 [ css [ title ] ] [ text "MyThoughts" ]
         , span [ css [ tagline ] ] [ text "Pour mettre de côté mes liens utiles" ]
         ]
 
-subbandeau : Html msg
+subbandeau : Html Msg
 subbandeau =
     div [ css [ subheader ]]
         [  h2 [] [ text "Mes catégories" ]
-        ,  span [ css [ create ] ] [ button [] [ text "Créer catégorie" ] ]
+        ,  span [ css [ create ] ] [ button [ onClick TogglePopup ] [ text "Créer catégorie" ] ]
         ]
 
 categories : List Category -> Html Msg
@@ -111,14 +140,19 @@ categories categories =
 view : Model -> (Html Msg)
 view model =
     div [ css [ content ] ]
-        [ bandeau
+        [ bulma 
+        , bandeau
         , subbandeau
         , categories model.categories
+        , if model.isPopUpActive then
+            renderModal model
+          else
+            text ""
         ]
 
 renderCategory : Category -> (Html Msg)
 renderCategory category =
-    span [] 
+    div [] 
          [ a [ href category.name ]
              [ text (category.name ++ renderNumberLinks category.links) 
              ]
@@ -127,6 +161,44 @@ renderCategory category =
 renderNumberLinks : List Link -> String
 renderNumberLinks links =
      " ( " ++ toString (List.length links) ++ " )"
+
+renderEditCategory : Maybe Category -> Html Msg
+renderEditCategory category =
+    let
+        name = 
+            case category of
+                Just category ->
+                    category.name
+                Nothing ->
+                    ""
+    in
+        div [ class "control" ] 
+            [ input [ class "input", placeholder "Nom...", onInput EditCategoryName ] 
+                    [ text name ]
+            ]
+
+renderModal : Model -> Html Msg
+renderModal model =
+    div [ class "modal is-active", attribute "aria-label" "Modal title" ]
+        [ div [ class "modal-background", onClick TogglePopup ]
+            []
+        , div [ class "modal-card" ]
+            [ header [ class "modal-card-head" ]
+                [ p [ class "modal-card-title" ]
+                    [ text "Nouvelle catégorie" ]
+                , button [ class "delete", onClick TogglePopup, attribute "aria-label" "close" ]
+                    []
+                ]
+            , section [ class "modal-card-body" ]
+                [ renderEditCategory model.currentCategory ]
+            , footer [ class "modal-card-foot" ]
+                [ button [ class "button is-link", attribute "aria-label" "rien", onClick NewCategory ]
+                    [ text "Valider" ]
+                , button [ class "button", onClick TogglePopup, attribute "aria-label" "cancel" ]
+                    [ text "Annuler" ]
+                ]
+            ]
+        ]
 
 main =
     Html.program

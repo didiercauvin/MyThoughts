@@ -14078,6 +14078,120 @@ var _rtfeldman$elm_css$Html_Styled_Attributes$style = function (_p0) {
 	return _rtfeldman$elm_css$Html_Styled_Attributes$fromUnstyled(
 		_elm_lang$virtual_dom$VirtualDom$style(_p0));
 };
+var _rtfeldman$elm_css$Html_Styled_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _rtfeldman$elm_css$Html_Styled_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$bool);
+var _rtfeldman$elm_css$Html_Styled_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _rtfeldman$elm_css$Html_Styled_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _rtfeldman$elm_css$Html_Styled_Events$onWithOptions = _rtfeldman$elm_css$VirtualDom_Styled$onWithOptions;
+var _rtfeldman$elm_css$Html_Styled_Events$on = _rtfeldman$elm_css$VirtualDom_Styled$on;
+var _rtfeldman$elm_css$Html_Styled_Events$onFocus = function (msg) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'focus',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onBlur = function (msg) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'blur',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
+	_rtfeldman$elm_css$Html_Styled_Events$defaultOptions,
+	{preventDefault: true});
+var _rtfeldman$elm_css$Html_Styled_Events$onSubmit = function (msg) {
+	return A3(
+		_rtfeldman$elm_css$Html_Styled_Events$onWithOptions,
+		'submit',
+		_rtfeldman$elm_css$Html_Styled_Events$onSubmitOptions,
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onCheck = function (tagger) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'change',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _rtfeldman$elm_css$Html_Styled_Events$targetChecked));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onInput = function (tagger) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'input',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _rtfeldman$elm_css$Html_Styled_Events$targetValue));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onMouseOut = function (msg) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'mouseout',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onMouseOver = function (msg) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'mouseover',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onMouseLeave = function (msg) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'mouseleave',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onMouseEnter = function (msg) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'mouseenter',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onMouseUp = function (msg) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'mouseup',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onMouseDown = function (msg) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'mousedown',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onDoubleClick = function (msg) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'dblclick',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$onClick = function (msg) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled_Events$on,
+		'click',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _rtfeldman$elm_css$Html_Styled_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});
 var _user$project$Main$renderNumberLinks = function (links) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
@@ -14090,7 +14204,7 @@ var _user$project$Main$renderNumberLinks = function (links) {
 };
 var _user$project$Main$renderCategory = function (category) {
 	return A2(
-		_rtfeldman$elm_css$Html_Styled$span,
+		_rtfeldman$elm_css$Html_Styled$div,
 		{ctor: '[]'},
 		{
 			ctor: '::',
@@ -14116,7 +14230,60 @@ var _user$project$Main$renderCategory = function (category) {
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		switch (_p0.ctor) {
+			case 'TogglePopup':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{isPopUpActive: !model.isPopUpActive}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'EditCategoryName':
+				var _p2 = _p0._0;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							currentCategory: function () {
+								var _p1 = model.currentCategory;
+								if (_p1.ctor === 'Just') {
+									return _elm_lang$core$Maybe$Just(
+										_elm_lang$core$Native_Utils.update(
+											_p1._0,
+											{name: _p2}));
+								} else {
+									return _elm_lang$core$Maybe$Just(
+										{
+											name: _p2,
+											links: {ctor: '[]'}
+										});
+								}
+							}()
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							categories: function () {
+								var _p3 = model.currentCategory;
+								if (_p3.ctor === 'Just') {
+									return {ctor: '::', _0: _p3._0, _1: model.categories};
+								} else {
+									return model.categories;
+								}
+							}(),
+							currentCategory: _elm_lang$core$Maybe$Nothing,
+							isPopUpActive: false
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
 	});
 var _user$project$Main$init = {
 	ctor: '_Tuple2',
@@ -14128,10 +14295,28 @@ var _user$project$Main$init = {
 				links: {ctor: '[]'}
 			},
 			_1: {ctor: '[]'}
-		}
+		},
+		isPopUpActive: false,
+		currentCategory: _elm_lang$core$Maybe$Nothing
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
+var _user$project$Main$addCss = function (path) {
+	return A3(
+		_rtfeldman$elm_css$Html_Styled$node,
+		'link',
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Html_Styled_Attributes$rel('stylesheet'),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled_Attributes$href(path),
+				_1: {ctor: '[]'}
+			}
+		},
+		{ctor: '[]'});
+};
+var _user$project$Main$bulma = _user$project$Main$addCss('https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css');
 var _user$project$Main$create = _rtfeldman$elm_css$Css$batch(
 	{
 		ctor: '::',
@@ -14202,8 +14387,8 @@ var _user$project$Main$listCategories = _rtfeldman$elm_css$Css$batch(
 		_1: {ctor: '[]'}
 	});
 var _user$project$Main$categories = function (categories) {
-	var _p1 = _elm_lang$core$List$length(categories);
-	if (_p1 === 0) {
+	var _p4 = _elm_lang$core$List$length(categories);
+	if (_p4 === 0) {
 		return A2(
 			_rtfeldman$elm_css$Html_Styled$div,
 			{
@@ -14253,58 +14438,7 @@ var _user$project$Main$subheader = _rtfeldman$elm_css$Css$batch(
 			}
 		}
 	});
-var _user$project$Main$subbandeau = A2(
-	_rtfeldman$elm_css$Html_Styled$div,
-	{
-		ctor: '::',
-		_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-			{
-				ctor: '::',
-				_0: _user$project$Main$subheader,
-				_1: {ctor: '[]'}
-			}),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_rtfeldman$elm_css$Html_Styled$h2,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled$text('Mes catégories'),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_rtfeldman$elm_css$Html_Styled$span,
-				{
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-						{
-							ctor: '::',
-							_0: _user$project$Main$create,
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_rtfeldman$elm_css$Html_Styled$button,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled$text('Créer catégorie'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		}
-	});
-var _user$project$Main$header = _rtfeldman$elm_css$Css$batch(
+var _user$project$Main$mainHeader = _rtfeldman$elm_css$Css$batch(
 	{
 		ctor: '::',
 		_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$relative),
@@ -14332,7 +14466,7 @@ var _user$project$Main$bandeau = A2(
 		_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
 			{
 				ctor: '::',
-				_0: _user$project$Main$header,
+				_0: _user$project$Main$mainHeader,
 				_1: {ctor: '[]'}
 			}),
 		_1: {ctor: '[]'}
@@ -14414,6 +14548,272 @@ var _user$project$Main$content = _rtfeldman$elm_css$Css$batch(
 			}
 		}
 	});
+var _user$project$Main$Model = F3(
+	function (a, b, c) {
+		return {categories: a, currentCategory: b, isPopUpActive: c};
+	});
+var _user$project$Main$Category = F2(
+	function (a, b) {
+		return {name: a, links: b};
+	});
+var _user$project$Main$NewCategory = {ctor: 'NewCategory'};
+var _user$project$Main$EditCategoryName = function (a) {
+	return {ctor: 'EditCategoryName', _0: a};
+};
+var _user$project$Main$renderEditCategory = function (category) {
+	var name = function () {
+		var _p5 = category;
+		if (_p5.ctor === 'Just') {
+			return _p5._0.name;
+		} else {
+			return '';
+		}
+	}();
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('control'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$input,
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('input'),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder('Nom...'),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_user$project$Main$EditCategoryName),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled$text(name),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$TogglePopup = {ctor: 'TogglePopup'};
+var _user$project$Main$subbandeau = A2(
+	_rtfeldman$elm_css$Html_Styled$div,
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+			{
+				ctor: '::',
+				_0: _user$project$Main$subheader,
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_rtfeldman$elm_css$Html_Styled$h2,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled$text('Mes catégories'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$span,
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+						{
+							ctor: '::',
+							_0: _user$project$Main$create,
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$button,
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Main$TogglePopup),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled$text('Créer catégorie'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$Main$renderModal = function (model) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('modal is-active'),
+			_1: {
+				ctor: '::',
+				_0: A2(_rtfeldman$elm_css$Html_Styled_Attributes$attribute, 'aria-label', 'Modal title'),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$div,
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('modal-background'),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Main$TogglePopup),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$div,
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('modal-card'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_rtfeldman$elm_css$Html_Styled$header,
+							{
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('modal-card-head'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_rtfeldman$elm_css$Html_Styled$p,
+									{
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('modal-card-title'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled$text('Nouvelle catégorie'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_rtfeldman$elm_css$Html_Styled$button,
+										{
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('delete'),
+											_1: {
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Main$TogglePopup),
+												_1: {
+													ctor: '::',
+													_0: A2(_rtfeldman$elm_css$Html_Styled_Attributes$attribute, 'aria-label', 'close'),
+													_1: {ctor: '[]'}
+												}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_rtfeldman$elm_css$Html_Styled$section,
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('modal-card-body'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _user$project$Main$renderEditCategory(model.currentCategory),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_rtfeldman$elm_css$Html_Styled$footer,
+									{
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('modal-card-foot'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_rtfeldman$elm_css$Html_Styled$button,
+											{
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('button is-link'),
+												_1: {
+													ctor: '::',
+													_0: A2(_rtfeldman$elm_css$Html_Styled_Attributes$attribute, 'aria-label', 'rien'),
+													_1: {
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Main$NewCategory),
+														_1: {ctor: '[]'}
+													}
+												}
+											},
+											{
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Html_Styled$text('Valider'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_rtfeldman$elm_css$Html_Styled$button,
+												{
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('button'),
+													_1: {
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Main$TogglePopup),
+														_1: {
+															ctor: '::',
+															_0: A2(_rtfeldman$elm_css$Html_Styled_Attributes$attribute, 'aria-label', 'cancel'),
+															_1: {ctor: '[]'}
+														}
+													}
+												},
+												{
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Html_Styled$text('Annuler'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _user$project$Main$view = function (model) {
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
@@ -14429,14 +14829,22 @@ var _user$project$Main$view = function (model) {
 		},
 		{
 			ctor: '::',
-			_0: _user$project$Main$bandeau,
+			_0: _user$project$Main$bulma,
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$subbandeau,
+				_0: _user$project$Main$bandeau,
 				_1: {
 					ctor: '::',
-					_0: _user$project$Main$categories(model.categories),
-					_1: {ctor: '[]'}
+					_0: _user$project$Main$subbandeau,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$categories(model.categories),
+						_1: {
+							ctor: '::',
+							_0: model.isPopUpActive ? _user$project$Main$renderModal(model) : _rtfeldman$elm_css$Html_Styled$text(''),
+							_1: {ctor: '[]'}
+						}
+					}
 				}
 			}
 		});
@@ -14444,23 +14852,15 @@ var _user$project$Main$view = function (model) {
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{
 		init: _user$project$Main$init,
-		view: function (_p2) {
+		view: function (_p6) {
 			return _rtfeldman$elm_css$Html_Styled$toUnstyled(
-				_user$project$Main$view(_p2));
+				_user$project$Main$view(_p6));
 		},
 		update: _user$project$Main$update,
-		subscriptions: function (_p3) {
+		subscriptions: function (_p7) {
 			return _elm_lang$core$Platform_Sub$none;
 		}
 	})();
-var _user$project$Main$Model = function (a) {
-	return {categories: a};
-};
-var _user$project$Main$Category = F2(
-	function (a, b) {
-		return {name: a, links: b};
-	});
-var _user$project$Main$NoOp = {ctor: 'NoOp'};
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {

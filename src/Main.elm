@@ -50,7 +50,7 @@ tagline =
         [   color (hex "eee")
         ,   position absolute
         ,   right (px 16)
-        ,   top (px 12)
+        ,   top (px 0)
         ,   fontSize (px 24)
         ,   fontStyle italic
         ]
@@ -87,10 +87,11 @@ type Msg
     = TogglePopup
     | EditCategoryName String
     | NewCategory
+    | CancelEditCategory
 
 init : (Model, Cmd Msg)
 init =
-    ({ categories = [{name = "Developpement", links = []}], isPopUpActive = False, currentCategory = Nothing }, Cmd.none)
+    ({ categories = [], isPopUpActive = False, currentCategory = Nothing }, Cmd.none)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -105,6 +106,7 @@ update msg model =
                                 Nothing ->
                                     Just { name = name, links = [] }           
             }, Cmd.none )
+
         NewCategory ->
             ( { model | categories = case model.currentCategory of
                                         Just currentCategory ->
@@ -113,7 +115,10 @@ update msg model =
                                             model.categories
                       , currentCategory = Nothing
                       , isPopUpActive = False
-             }, Cmd.none ) 
+             }, Cmd.none )
+
+        CancelEditCategory ->
+            ( { model | currentCategory = Nothing }, Cmd.none )
 
 bandeau : Html msg
 bandeau =
@@ -160,7 +165,7 @@ renderCategory category =
 
 renderNumberLinks : List Link -> String
 renderNumberLinks links =
-     " ( " ++ toString (List.length links) ++ " )"
+     " (" ++ toString (List.length links) ++ ")"
 
 renderEditCategory : Maybe Category -> Html Msg
 renderEditCategory category =

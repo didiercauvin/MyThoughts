@@ -14195,12 +14195,12 @@ var _rtfeldman$elm_css$Html_Styled_Events$Options = F2(
 var _user$project$Main$renderNumberLinks = function (links) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
-		' ( ',
+		' (',
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			_elm_lang$core$Basics$toString(
 				_elm_lang$core$List$length(links)),
-			' )'));
+			')'));
 };
 var _user$project$Main$renderCategory = function (category) {
 	return A2(
@@ -14264,7 +14264,7 @@ var _user$project$Main$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'NewCategory':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -14283,19 +14283,20 @@ var _user$project$Main$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{currentCategory: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
 var _user$project$Main$init = {
 	ctor: '_Tuple2',
 	_0: {
-		categories: {
-			ctor: '::',
-			_0: {
-				name: 'Developpement',
-				links: {ctor: '[]'}
-			},
-			_1: {ctor: '[]'}
-		},
+		categories: {ctor: '[]'},
 		isPopUpActive: false,
 		currentCategory: _elm_lang$core$Maybe$Nothing
 	},
@@ -14348,7 +14349,7 @@ var _user$project$Main$tagline = _rtfeldman$elm_css$Css$batch(
 				_1: {
 					ctor: '::',
 					_0: _rtfeldman$elm_css$Css$top(
-						_rtfeldman$elm_css$Css$px(12)),
+						_rtfeldman$elm_css$Css$px(0)),
 					_1: {
 						ctor: '::',
 						_0: _rtfeldman$elm_css$Css$fontSize(
@@ -14556,6 +14557,7 @@ var _user$project$Main$Category = F2(
 	function (a, b) {
 		return {name: a, links: b};
 	});
+var _user$project$Main$CancelEditCategory = {ctor: 'CancelEditCategory'};
 var _user$project$Main$NewCategory = {ctor: 'NewCategory'};
 var _user$project$Main$EditCategoryName = function (a) {
 	return {ctor: 'EditCategoryName', _0: a};

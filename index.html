@@ -6165,6 +6165,136 @@ var _elm_lang$core$Regex$AtMost = function (a) {
 	return {ctor: 'AtMost', _0: a};
 };
 var _elm_lang$core$Regex$All = {ctor: 'All'};
+var _elm_lang$core$Set$foldr = F3(
+	function (f, b, _p0) {
+		var _p1 = _p0;
+		return A3(
+			_elm_lang$core$Dict$foldr,
+			F3(
+				function (k, _p2, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p1._0);
+	});
+var _elm_lang$core$Set$foldl = F3(
+	function (f, b, _p3) {
+		var _p4 = _p3;
+		return A3(
+			_elm_lang$core$Dict$foldl,
+			F3(
+				function (k, _p5, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p4._0);
+	});
+var _elm_lang$core$Set$toList = function (_p6) {
+	var _p7 = _p6;
+	return _elm_lang$core$Dict$keys(_p7._0);
+};
+var _elm_lang$core$Set$size = function (_p8) {
+	var _p9 = _p8;
+	return _elm_lang$core$Dict$size(_p9._0);
+};
+var _elm_lang$core$Set$member = F2(
+	function (k, _p10) {
+		var _p11 = _p10;
+		return A2(_elm_lang$core$Dict$member, k, _p11._0);
+	});
+var _elm_lang$core$Set$isEmpty = function (_p12) {
+	var _p13 = _p12;
+	return _elm_lang$core$Dict$isEmpty(_p13._0);
+};
+var _elm_lang$core$Set$Set_elm_builtin = function (a) {
+	return {ctor: 'Set_elm_builtin', _0: a};
+};
+var _elm_lang$core$Set$empty = _elm_lang$core$Set$Set_elm_builtin(_elm_lang$core$Dict$empty);
+var _elm_lang$core$Set$singleton = function (k) {
+	return _elm_lang$core$Set$Set_elm_builtin(
+		A2(
+			_elm_lang$core$Dict$singleton,
+			k,
+			{ctor: '_Tuple0'}));
+};
+var _elm_lang$core$Set$insert = F2(
+	function (k, _p14) {
+		var _p15 = _p14;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A3(
+				_elm_lang$core$Dict$insert,
+				k,
+				{ctor: '_Tuple0'},
+				_p15._0));
+	});
+var _elm_lang$core$Set$fromList = function (xs) {
+	return A3(_elm_lang$core$List$foldl, _elm_lang$core$Set$insert, _elm_lang$core$Set$empty, xs);
+};
+var _elm_lang$core$Set$map = F2(
+	function (f, s) {
+		return _elm_lang$core$Set$fromList(
+			A2(
+				_elm_lang$core$List$map,
+				f,
+				_elm_lang$core$Set$toList(s)));
+	});
+var _elm_lang$core$Set$remove = F2(
+	function (k, _p16) {
+		var _p17 = _p16;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$remove, k, _p17._0));
+	});
+var _elm_lang$core$Set$union = F2(
+	function (_p19, _p18) {
+		var _p20 = _p19;
+		var _p21 = _p18;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$union, _p20._0, _p21._0));
+	});
+var _elm_lang$core$Set$intersect = F2(
+	function (_p23, _p22) {
+		var _p24 = _p23;
+		var _p25 = _p22;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$intersect, _p24._0, _p25._0));
+	});
+var _elm_lang$core$Set$diff = F2(
+	function (_p27, _p26) {
+		var _p28 = _p27;
+		var _p29 = _p26;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$diff, _p28._0, _p29._0));
+	});
+var _elm_lang$core$Set$filter = F2(
+	function (p, _p30) {
+		var _p31 = _p30;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(
+				_elm_lang$core$Dict$filter,
+				F2(
+					function (k, _p32) {
+						return p(k);
+					}),
+				_p31._0));
+	});
+var _elm_lang$core$Set$partition = F2(
+	function (p, _p33) {
+		var _p34 = _p33;
+		var _p35 = A2(
+			_elm_lang$core$Dict$partition,
+			F2(
+				function (k, _p36) {
+					return p(k);
+				}),
+			_p34._0);
+		var p1 = _p35._0;
+		var p2 = _p35._1;
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Set$Set_elm_builtin(p1),
+			_1: _elm_lang$core$Set$Set_elm_builtin(p2)
+		};
+	});
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrap;
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags;
 
@@ -14192,6 +14322,266 @@ var _rtfeldman$elm_css$Html_Styled_Events$Options = F2(
 	function (a, b) {
 		return {stopPropagation: a, preventDefault: b};
 	});
+var _rtfeldman$elm_validate$Validate$validEmail = _elm_lang$core$Regex$caseInsensitive(
+	_elm_lang$core$Regex$regex('^[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$'));
+var _rtfeldman$elm_validate$Validate$isInt = function (str) {
+	var _p0 = _elm_lang$core$String$toInt(str);
+	if (_p0.ctor === 'Ok') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var _rtfeldman$elm_validate$Validate$isFloat = function (str) {
+	var _p1 = _elm_lang$core$String$toFloat(str);
+	if (_p1.ctor === 'Ok') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var _rtfeldman$elm_validate$Validate$isValidEmail = function (email) {
+	return A2(_elm_lang$core$Regex$contains, _rtfeldman$elm_validate$Validate$validEmail, email);
+};
+var _rtfeldman$elm_validate$Validate$isWhitespaceChar = function ($char) {
+	return _elm_lang$core$Native_Utils.eq(
+		$char,
+		_elm_lang$core$Native_Utils.chr(' ')) || (_elm_lang$core$Native_Utils.eq(
+		$char,
+		_elm_lang$core$Native_Utils.chr('\n')) || (_elm_lang$core$Native_Utils.eq(
+		$char,
+		_elm_lang$core$Native_Utils.chr('\t')) || _elm_lang$core$Native_Utils.eq(
+		$char,
+		_elm_lang$core$Native_Utils.chr('\r'))));
+};
+var _rtfeldman$elm_validate$Validate$isBlank = function (str) {
+	isBlank:
+	while (true) {
+		var _p2 = _elm_lang$core$String$uncons(str);
+		if (_p2.ctor === 'Just') {
+			if (_rtfeldman$elm_validate$Validate$isWhitespaceChar(_p2._0._0)) {
+				var _v3 = _p2._0._1;
+				str = _v3;
+				continue isBlank;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+};
+var _rtfeldman$elm_validate$Validate$any = F2(
+	function (validators, subject) {
+		any:
+		while (true) {
+			var _p3 = validators;
+			if (_p3.ctor === '[]') {
+				return true;
+			} else {
+				var _p4 = _p3._0._0(subject);
+				if (_p4.ctor === '[]') {
+					var _v6 = _p3._1,
+						_v7 = subject;
+					validators = _v6;
+					subject = _v7;
+					continue any;
+				} else {
+					return false;
+				}
+			}
+		}
+	});
+var _rtfeldman$elm_validate$Validate$firstErrorHelp = F2(
+	function (validators, subject) {
+		firstErrorHelp:
+		while (true) {
+			var _p5 = validators;
+			if (_p5.ctor === '[]') {
+				return {ctor: '[]'};
+			} else {
+				var _p6 = _p5._0._0(subject);
+				if (_p6.ctor === '[]') {
+					var _v10 = _p5._1,
+						_v11 = subject;
+					validators = _v10;
+					subject = _v11;
+					continue firstErrorHelp;
+				} else {
+					return _p6;
+				}
+			}
+		}
+	});
+var _rtfeldman$elm_validate$Validate$validate = F2(
+	function (_p7, subject) {
+		var _p8 = _p7;
+		return _p8._0(subject);
+	});
+var _rtfeldman$elm_validate$Validate$Validator = function (a) {
+	return {ctor: 'Validator', _0: a};
+};
+var _rtfeldman$elm_validate$Validate$ifNotInt = F2(
+	function (subjectToString, errorFromString) {
+		var getErrors = function (subject) {
+			var str = subjectToString(subject);
+			return _rtfeldman$elm_validate$Validate$isInt(str) ? {ctor: '[]'} : {
+				ctor: '::',
+				_0: errorFromString(str),
+				_1: {ctor: '[]'}
+			};
+		};
+		return _rtfeldman$elm_validate$Validate$Validator(getErrors);
+	});
+var _rtfeldman$elm_validate$Validate$ifInvalidEmail = F2(
+	function (subjectToEmail, errorFromEmail) {
+		var getErrors = function (subject) {
+			var email = subjectToEmail(subject);
+			return _rtfeldman$elm_validate$Validate$isValidEmail(email) ? {ctor: '[]'} : {
+				ctor: '::',
+				_0: errorFromEmail(email),
+				_1: {ctor: '[]'}
+			};
+		};
+		return _rtfeldman$elm_validate$Validate$Validator(getErrors);
+	});
+var _rtfeldman$elm_validate$Validate$fromErrors = function (toErrors) {
+	return _rtfeldman$elm_validate$Validate$Validator(toErrors);
+};
+var _rtfeldman$elm_validate$Validate$ifTrue = F2(
+	function (test, error) {
+		var getErrors = function (subject) {
+			return test(subject) ? {
+				ctor: '::',
+				_0: error,
+				_1: {ctor: '[]'}
+			} : {ctor: '[]'};
+		};
+		return _rtfeldman$elm_validate$Validate$Validator(getErrors);
+	});
+var _rtfeldman$elm_validate$Validate$ifBlank = F2(
+	function (subjectToString, error) {
+		return A2(
+			_rtfeldman$elm_validate$Validate$ifTrue,
+			function (subject) {
+				return _rtfeldman$elm_validate$Validate$isBlank(
+					subjectToString(subject));
+			},
+			error);
+	});
+var _rtfeldman$elm_validate$Validate$ifEmptyList = F2(
+	function (subjectToList, error) {
+		return A2(
+			_rtfeldman$elm_validate$Validate$ifTrue,
+			function (subject) {
+				return _elm_lang$core$List$isEmpty(
+					subjectToList(subject));
+			},
+			error);
+	});
+var _rtfeldman$elm_validate$Validate$ifEmptyDict = F2(
+	function (subjectToDict, error) {
+		return A2(
+			_rtfeldman$elm_validate$Validate$ifTrue,
+			function (subject) {
+				return _elm_lang$core$Dict$isEmpty(
+					subjectToDict(subject));
+			},
+			error);
+	});
+var _rtfeldman$elm_validate$Validate$ifEmptySet = F2(
+	function (subjectToSet, error) {
+		return A2(
+			_rtfeldman$elm_validate$Validate$ifTrue,
+			function (subject) {
+				return _elm_lang$core$Set$isEmpty(
+					subjectToSet(subject));
+			},
+			error);
+	});
+var _rtfeldman$elm_validate$Validate$ifNothing = F2(
+	function (subjectToMaybe, error) {
+		return A2(
+			_rtfeldman$elm_validate$Validate$ifTrue,
+			function (subject) {
+				return _elm_lang$core$Native_Utils.eq(
+					subjectToMaybe(subject),
+					_elm_lang$core$Maybe$Nothing);
+			},
+			error);
+	});
+var _rtfeldman$elm_validate$Validate$ifNotFloat = F2(
+	function (subjectToString, error) {
+		return A2(
+			_rtfeldman$elm_validate$Validate$ifTrue,
+			function (subject) {
+				return _rtfeldman$elm_validate$Validate$isFloat(
+					subjectToString(subject));
+			},
+			error);
+	});
+var _rtfeldman$elm_validate$Validate$ifFalse = F2(
+	function (test, error) {
+		var getErrors = function (subject) {
+			return test(subject) ? {ctor: '[]'} : {
+				ctor: '::',
+				_0: error,
+				_1: {ctor: '[]'}
+			};
+		};
+		return _rtfeldman$elm_validate$Validate$Validator(getErrors);
+	});
+var _rtfeldman$elm_validate$Validate$all = function (validators) {
+	var newGetErrors = function (subject) {
+		var accumulateErrors = F2(
+			function (_p9, totalErrors) {
+				var _p10 = _p9;
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					totalErrors,
+					_p10._0(subject));
+			});
+		return A3(
+			_elm_lang$core$List$foldl,
+			accumulateErrors,
+			{ctor: '[]'},
+			validators);
+	};
+	return _rtfeldman$elm_validate$Validate$Validator(newGetErrors);
+};
+var _rtfeldman$elm_validate$Validate$firstError = function (validators) {
+	var getErrors = function (subject) {
+		return A2(_rtfeldman$elm_validate$Validate$firstErrorHelp, validators, subject);
+	};
+	return _rtfeldman$elm_validate$Validate$Validator(getErrors);
+};
+var _user$project$Main$modelValidator = _rtfeldman$elm_validate$Validate$all(
+	{
+		ctor: '::',
+		_0: A2(
+			_rtfeldman$elm_validate$Validate$ifBlank,
+			function (_) {
+				return _.name;
+			},
+			'Veuillez renseigner un nom...'),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Main$renderError = function (error) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Html_Styled$text(error),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$renderErrors = function (errors) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{ctor: '[]'},
+		A2(_elm_lang$core$List$map, _user$project$Main$renderError, errors));
+};
 var _user$project$Main$renderNumberLinks = function (links) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
@@ -14257,7 +14647,8 @@ var _user$project$Main$update = F2(
 									return _elm_lang$core$Maybe$Just(
 										{
 											name: _p2,
-											links: {ctor: '[]'}
+											links: {ctor: '[]'},
+											errors: {ctor: '[]'}
 										});
 								}
 							}()
@@ -14265,30 +14656,49 @@ var _user$project$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NewCategory':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							categories: function () {
-								var _p3 = model.currentCategory;
-								if (_p3.ctor === 'Just') {
-									return {ctor: '::', _0: _p3._0, _1: model.categories};
-								} else {
-									return model.categories;
-								}
-							}(),
-							currentCategory: _elm_lang$core$Maybe$Nothing,
-							isPopUpActive: false
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+				var _p3 = model.currentCategory;
+				if (_p3.ctor === 'Just') {
+					var _p5 = _p3._0;
+					var _p4 = A2(_rtfeldman$elm_validate$Validate$validate, _user$project$Main$modelValidator, _p5);
+					if (_p4.ctor === '[]') {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									categories: {ctor: '::', _0: _p5, _1: model.categories},
+									currentCategory: _elm_lang$core$Maybe$Nothing,
+									isPopUpActive: false
+								}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					} else {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									currentCategory: _elm_lang$core$Maybe$Just(
+										{errors: _p4, name: _p5.name, links: _p5.links})
+								}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					}
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{categories: model.categories, currentCategory: _elm_lang$core$Maybe$Nothing, isPopUpActive: false}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
 			default:
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{currentCategory: _elm_lang$core$Maybe$Nothing}),
+						{currentCategory: _elm_lang$core$Maybe$Nothing, isPopUpActive: false}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
@@ -14388,8 +14798,8 @@ var _user$project$Main$listCategories = _rtfeldman$elm_css$Css$batch(
 		_1: {ctor: '[]'}
 	});
 var _user$project$Main$categories = function (categories) {
-	var _p4 = _elm_lang$core$List$length(categories);
-	if (_p4 === 0) {
+	var _p6 = _elm_lang$core$List$length(categories);
+	if (_p6 === 0) {
 		return A2(
 			_rtfeldman$elm_css$Html_Styled$div,
 			{
@@ -14553,9 +14963,9 @@ var _user$project$Main$Model = F3(
 	function (a, b, c) {
 		return {categories: a, currentCategory: b, isPopUpActive: c};
 	});
-var _user$project$Main$Category = F2(
-	function (a, b) {
-		return {name: a, links: b};
+var _user$project$Main$Category = F3(
+	function (a, b, c) {
+		return {name: a, links: b, errors: c};
 	});
 var _user$project$Main$CancelEditCategory = {ctor: 'CancelEditCategory'};
 var _user$project$Main$NewCategory = {ctor: 'NewCategory'};
@@ -14563,44 +14973,63 @@ var _user$project$Main$EditCategoryName = function (a) {
 	return {ctor: 'EditCategoryName', _0: a};
 };
 var _user$project$Main$renderEditCategory = function (category) {
-	var name = function () {
-		var _p5 = category;
-		if (_p5.ctor === 'Just') {
-			return _p5._0.name;
-		} else {
-			return '';
-		}
-	}();
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
+		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('control'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_rtfeldman$elm_css$Html_Styled$input,
-				{
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('input'),
-					_1: {
+			_0: function () {
+				var _p7 = category;
+				if (_p7.ctor === 'Just') {
+					return _user$project$Main$renderErrors(_p7._0.errors);
+				} else {
+					return _user$project$Main$renderErrors(
+						{ctor: '[]'});
+				}
+			}(),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$div,
+					{
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder('Nom...'),
-						_1: {
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_user$project$Main$EditCategoryName),
-							_1: {ctor: '[]'}
-						}
-					}
-				},
-				{
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled$text(name),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
+						_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('control'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_rtfeldman$elm_css$Html_Styled$input,
+							{
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('input'),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder('Nom...'),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_user$project$Main$EditCategoryName),
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							{
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Html_Styled$text(
+									function () {
+										var _p8 = category;
+										if (_p8.ctor === 'Just') {
+											return _p8._0.name;
+										} else {
+											return '';
+										}
+									}()),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _user$project$Main$TogglePopup = {ctor: 'TogglePopup'};
@@ -14726,7 +15155,7 @@ var _user$project$Main$renderModal = function (model) {
 											_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('delete'),
 											_1: {
 												ctor: '::',
-												_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Main$TogglePopup),
+												_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Main$CancelEditCategory),
 												_1: {
 													ctor: '::',
 													_0: A2(_rtfeldman$elm_css$Html_Styled_Attributes$attribute, 'aria-label', 'close'),
@@ -14792,7 +15221,7 @@ var _user$project$Main$renderModal = function (model) {
 													_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('button'),
 													_1: {
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Main$TogglePopup),
+														_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Main$CancelEditCategory),
 														_1: {
 															ctor: '::',
 															_0: A2(_rtfeldman$elm_css$Html_Styled_Attributes$attribute, 'aria-label', 'cancel'),
@@ -14854,12 +15283,12 @@ var _user$project$Main$view = function (model) {
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{
 		init: _user$project$Main$init,
-		view: function (_p6) {
+		view: function (_p9) {
 			return _rtfeldman$elm_css$Html_Styled$toUnstyled(
-				_user$project$Main$view(_p6));
+				_user$project$Main$view(_p9));
 		},
 		update: _user$project$Main$update,
-		subscriptions: function (_p7) {
+		subscriptions: function (_p10) {
 			return _elm_lang$core$Platform_Sub$none;
 		}
 	})();

@@ -3,6 +3,7 @@ import Html
 import Html.Styled.Events exposing (onClick, onInput)
 import Html.Styled exposing (input, div, h1, h2, text, toUnstyled, Html, span, button, a, node, header, footer, section, p)
 import Html.Styled.Attributes exposing (css, href, rel, class, attribute, placeholder)
+import Validate exposing (Validator, ifBlank, validate)
 
 content : Style
 content =
@@ -80,6 +81,7 @@ type alias Model =
 type alias Category =
     { name : String
     , links : List Link
+    , errors : List String
     }
 
 type alias Link = String
@@ -105,21 +107,28 @@ update msg model =
                                 Just currentCategory ->
                                     Just { currentCategory | name = name }
                                 Nothing ->
-                                    Just { name = name, links = [] }           
+                                    Just { name = name, links = [], errors = [] }           
             }, Cmd.none )
 
         NewCategory ->
-            ( { model | categories = case model.currentCategory of
-                                        Just currentCategory ->
-                                            currentCategory :: model.categories
-                                        Nothing ->
-                                            model.categories
-                      , currentCategory = Nothing
-                      , isPopUpActive = False
-             }, Cmd.none )
+            case model.currentCategory of
+                Just currentCategory ->
+                    case validate modelValidator currentCategory of
+                        [] ->
+                            ( { model | categories = currentCategory :: model.categories
+                                    , currentCategory = Nothing
+                                    , isPopUpActive = False
+                            }, Cmd.none )
+                        errors ->
+                            ( { model | currentCategory = Just { errors = errors, name = currentCategory.name, links = currentCategory.links } }, Cmd.none)
+                Nothing ->
+                    ( { model | categories = model.categories            
+                                    , currentCategory = Nothing
+                                    , isPopUpActive = False
+                            }, Cmd.none )
 
         CancelEditCategory ->
-            ( { model | currentCategory = Nothing }, Cmd.none )
+            ( { model | currentCategory = Nothing, isPopUpActive = False }, Cmd.none )
 
 bandeau : Html msg
 bandeau =
@@ -170,18 +179,31 @@ renderNumberLinks links =
 
 renderEditCategory : Maybe Category -> Html Msg
 renderEditCategory category =
-    let
-        name = 
-            case category of
-                Just category ->
-                    category.name
-                Nothing ->
-                    ""
-    in
-        div [ class "control" ] 
+    div [] 
+        [ case category of
+            Just category ->
+                renderErrors category.errors
+            Nothing ->
+                renderErrors []
+        , div [ class "control" ] 
             [ input [ class "input", placeholder "Nom...", onInput EditCategoryName ] 
-                    [ text name ]
+                    [ text ( case category of
+                        Just category ->
+                            category.name
+                        Nothing ->
+                            "") 
+                    ]
             ]
+        ]
+        
+
+renderErrors : List String -> Html Msg
+renderErrors errors =
+    div [] ( List.map renderError errors )
+
+renderError : String -> Html Msg
+renderError error =
+    div [] [ text error]
 
 renderModal : Model -> Html Msg
 renderModal model =
@@ -192,7 +214,7 @@ renderModal model =
             [ header [ class "modal-card-head" ]
                 [ p [ class "modal-card-title" ]
                     [ text "Nouvelle catégorie" ]
-                , button [ class "delete", onClick TogglePopup, attribute "aria-label" "close" ]
+                , button [ class "delete", onClick CancelEditCategory, attribute "aria-label" "close" ]
                     []
                 ]
             , section [ class "modal-card-body" ]
@@ -200,10 +222,16 @@ renderModal model =
             , footer [ class "modal-card-foot" ]
                 [ button [ class "button is-link", attribute "aria-label" "rien", onClick NewCategory ]
                     [ text "Valider" ]
-                , button [ class "button", onClick TogglePopup, attribute "aria-label" "cancel" ]
+                , button [ class "button", onClick CancelEditCategory, attribute "aria-label" "cancel" ]
                     [ text "Annuler" ]
                 ]
             ]
+        ]
+
+modelValidator : Validator String Category
+modelValidator =
+    Validate.all
+        [ ifBlank .name "Veuillez renseigner un nom..."
         ]
 
 main =

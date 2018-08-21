@@ -67,6 +67,7 @@ addCss : String -> Html msg
 addCss path =
     node "link" [ rel "stylesheet", href path] []
 
+bulma : Html msg
 bulma =
     addCss "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css"
 

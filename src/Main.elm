@@ -1,76 +1,9 @@
-import Css exposing (..)
 import Html
 import Html.Styled.Events exposing (onClick, onInput)
 import Html.Styled exposing (input, div, h1, h2, text, toUnstyled, Html, span, button, a, node, header, footer, section, p)
-import Html.Styled.Attributes exposing (css, href, rel, class, attribute, placeholder)
+import Html.Styled.Attributes exposing (id, css, href, rel, class, attribute, placeholder)
 import Validate exposing (Validator, ifBlank, validate)
-
-content : Style
-content =
-    Css.batch
-        [   width (px 1060)
-        ,   margin2 (px 0) auto
-        ,   padding (px 30)
-        ,   fontFamilies [ "Helvetica", "Arial", "serif" ]
-        ]
-
-mainHeader : Style
-mainHeader =    
-    Css.batch
-        [   position relative
-        ,   padding (px 6)
-        ,   height (px 36)
-        ,   backgroundColor (rgb 96 181 204)
-        ]
-
-subheader : Style
-subheader =
-    Css.batch
-        [   position relative
-        ,   padding (px 6)
-        ,   height (px 36)
-        ]
-
-listCategories : Style
-listCategories =
-    Css.batch
-        [ paddingTop (px 50)
-        ]
-
-title : Style
-title =
-    Css.batch
-        [   color (rgb 255 255 255)
-        ,   fontWeight normal
-        ,   margin (px 0)
-        ]
-
-tagline : Style
-tagline =
-    Css.batch
-        [   color (hex "eee")
-        ,   position absolute
-        ,   right (px 16)
-        ,   top (px 0)
-        ,   fontSize (px 24)
-        ,   fontStyle italic
-        ]
-
-create : Style
-create =
-    Css.batch
-        [   position absolute
-        ,   right (px 16)
-        ,   top (px 32)
-        ]
-
-addCss : String -> Html msg
-addCss path =
-    node "link" [ rel "stylesheet", href path] []
-
-bulma : Html msg
-bulma =
-    addCss "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css"
+import Style
 
 type alias Model =
     { categories : List Category
@@ -91,6 +24,7 @@ type Msg
     | EditCategoryName String
     | NewCategory
     | CancelEditCategory
+    | DeleteCategory
 
 init : (Model, Cmd Msg)
 init =
@@ -130,32 +64,35 @@ update msg model =
         CancelEditCategory ->
             ( { model | currentCategory = Nothing, isPopUpActive = False }, Cmd.none )
 
+        DeleteCategory ->
+            (model, Cmd.none)
+
 bandeau : Html msg
 bandeau =
-    div [ css [ mainHeader ] ] 
-        [ h1 [ css [ title ] ] [ text "MyThoughts" ]
-        , span [ css [ tagline ] ] [ text "Pour mettre de côté mes liens utiles" ]
+    div [ css [ Style.mainHeader ] ] 
+        [ h1 [ css [ Style.title ] ] [ text "MyThoughts" ]
+        , span [ css [ Style.tagline ] ] [ text "Pour mettre de côté mes liens utiles" ]
         ]
 
 subbandeau : Html Msg
 subbandeau =
-    div [ css [ subheader ]]
+    div [ css [ Style.subheader ]]
         [  h2 [] [ text "Mes catégories" ]
-        ,  span [ css [ create ] ] [ button [ onClick TogglePopup ] [ text "Créer catégorie" ] ]
+        ,  span [ css [ Style.create ] ] [ button [ onClick TogglePopup ] [ text "Créer catégorie" ] ]
         ]
 
 categories : List Category -> Html Msg
 categories categories =
     case List.length categories of
         0 ->
-            div [ css [ listCategories ] ] [ text "Liste désespéremment vide..." ]
+            div [ css [ Style.listCategories ] ] [ text "Liste désespéremment vide..." ]
         _ ->
-            div [ css [ listCategories ] ] (List.map renderCategory categories)
+            div [ css [ Style.listCategories ] ] (List.map renderCategory categories)
 
 view : Model -> (Html Msg)
 view model =
-    div [ css [ content ] ]
-        [ bulma 
+    div [ css [ Style.content ] ]
+        [ Style.bulma 
         , bandeau
         , subbandeau
         , categories model.categories
@@ -167,10 +104,14 @@ view model =
 
 renderCategory : Category -> (Html Msg)
 renderCategory category =
-    div [] 
-         [ a [ href category.name ]
-             [ text (category.name ++ renderNumberLinks category.links) 
-             ]
+    div [ class "categoryItem"  ] 
+         [   Style.categoryItemButton   
+         ,   Style.categoryItemOnHover 
+         ,   a [ href category.name ]
+                [ text (category.name ++ renderNumberLinks category.links) 
+                ]
+                  
+         , a [ id "deleteCategory", class "delete is-small", onClick DeleteCategory ] []
          ]
 
 renderNumberLinks : List Link -> String

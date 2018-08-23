@@ -13,16 +13,31 @@ type alias Model =
     , isPopUpActive : Bool
     }
 
+type CategoryListMsg
+    = Add
+    | Delete String
+
 type Msg 
     = TogglePopup
     | MsgForCategory Category.Update.Msg
-    | AddCategory
+    | MsgForCategoryList CategoryListMsg
     | CancelEditCategory
-    | DeleteCategory String
 
 init : (Model, Cmd Msg)
 init =
     ({ categories = [], isPopUpActive = False, currentCategoryModel = Category.Model.emptyModel }, Cmd.none)
+
+updateCategoryList : CategoryListMsg -> Model -> (Model, Cmd Msg)
+updateCategoryList msg model =
+    case msg of
+        Add ->
+            ({ model | isPopUpActive = not model.isPopUpActive
+                    , currentCategoryModel = Category.Model.emptyModel
+                    , categories = model.currentCategoryModel.category :: model.categories
+            }, Cmd.none)
+        
+        Delete name ->
+            ( { model | categories = List.filter (\category -> category.name /= name) model.categories }, Cmd.none )
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -37,16 +52,15 @@ update msg model =
             in
                 ( { model | currentCategoryModel = categoryModel }, Cmd.map MsgForCategory cmdMsg )
 
-        AddCategory ->
-            ( { model | isPopUpActive = not model.isPopUpActive
-                      , currentCategoryModel = Category.Model.emptyModel
-                      , categories = model.currentCategoryModel.category :: model.categories  }, Cmd.none)
+        MsgForCategoryList msg ->
+            let
+                (categoryListModel, cmdMsg) =   
+                    updateCategoryList msg model
+            in
+                ( categoryListModel, cmdMsg)
 
         CancelEditCategory ->
             ( { model | isPopUpActive = not model.isPopUpActive, currentCategoryModel = Category.Model.emptyModel }, Cmd.none)
-              
-        _ ->
-            (model, Cmd.none)
 
 bandeau : Html msg
 bandeau =
@@ -92,7 +106,7 @@ renderCategory category =
                 [ text (category.name ++ renderNumberLinks category.links) 
                 ]
                   
-         , a [ id "deleteCategory", class "delete is-small", onClick ( DeleteCategory category.name ) ] []
+         , a [ id "deleteCategory", class "delete is-small", onClick ( MsgForCategoryList (Delete (category.name )  ) ) ] []
          ]
 
 renderNumberLinks : List Link -> String
@@ -115,7 +129,7 @@ renderModal model =
         , section [ class "modal-card-body" ]
             [ HtmlStyled.map MsgForCategory (Category.View.view model.currentCategoryModel) ]
         , footer [ class "modal-card-foot" ]
-            [ button [ class "button is-link", attribute "aria-label" "rien", onClick AddCategory ]
+            [ button [ class "button is-link", attribute "aria-label" "rien", onClick (MsgForCategoryList Add) ]
                 [ text "Valider" ]
             , button [ class "button", onClick CancelEditCategory, attribute "aria-label" "cancel" ]
                 [ text "Annuler" ]

@@ -19486,6 +19486,37 @@ var _user$project$Category_View$view = function (model) {
 		});
 };
 
+var _user$project$CategoryList_Model$emptyModel = {ctor: '[]'};
+
+var _user$project$CategoryList_Update$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		if (_p0.ctor === 'Add') {
+			return {
+				ctor: '_Tuple2',
+				_0: {ctor: '::', _0: _p0._0, _1: model},
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		} else {
+			return {
+				ctor: '_Tuple2',
+				_0: A2(
+					_elm_lang$core$List$filter,
+					function (category) {
+						return !_elm_lang$core$Native_Utils.eq(category.name, _p0._0);
+					},
+					model),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		}
+	});
+var _user$project$CategoryList_Update$Delete = function (a) {
+	return {ctor: 'Delete', _0: a};
+};
+var _user$project$CategoryList_Update$Add = function (a) {
+	return {ctor: 'Add', _0: a};
+};
+
 var _user$project$Style$categoryItemOnHover = _rtfeldman$elm_css$Css_Foreign$global(
 	{
 		ctor: '::',
@@ -19671,7 +19702,7 @@ var _user$project$Style$content = _rtfeldman$elm_css$Css$batch(
 		}
 	});
 
-var _user$project$Main$renderNumberLinks = function (links) {
+var _user$project$CategoryList_View$renderNumberLinks = function (links) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		' (',
@@ -19681,6 +19712,104 @@ var _user$project$Main$renderNumberLinks = function (links) {
 				_elm_lang$core$List$length(links)),
 			')'));
 };
+var _user$project$CategoryList_View$renderCategory = function (category) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('categoryItem'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Style$categoryItemButton,
+			_1: {
+				ctor: '::',
+				_0: _user$project$Style$categoryItemOnHover,
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$a,
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('button is-link is-rounded'),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Html_Styled_Attributes$href(category.name),
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									category.name,
+									_user$project$CategoryList_View$renderNumberLinks(category.links))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_rtfeldman$elm_css$Html_Styled$a,
+							{
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Html_Styled_Attributes$id('deleteCategory'),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('delete is-small'),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(
+											_user$project$CategoryList_Update$Delete(category.name)),
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$CategoryList_View$view = function (model) {
+	var _p0 = _elm_lang$core$List$length(model);
+	if (_p0 === 0) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+					{
+						ctor: '::',
+						_0: _user$project$Style$listCategories,
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled$text('Liste désespéremment vide...'),
+				_1: {ctor: '[]'}
+			});
+	} else {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+					{
+						ctor: '::',
+						_0: _user$project$Style$listCategories,
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			},
+			A2(_elm_lang$core$List$map, _user$project$CategoryList_View$renderCategory, model));
+	}
+};
+
 var _user$project$Main$bandeau = A2(
 	_rtfeldman$elm_css$Html_Styled$div,
 	{
@@ -19734,38 +19863,6 @@ var _user$project$Main$bandeau = A2(
 			_1: {ctor: '[]'}
 		}
 	});
-var _user$project$Main$updateCategoryList = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'Add') {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						isPopUpActive: !model.isPopUpActive,
-						currentCategoryModel: _user$project$Category_Model$emptyModel,
-						categories: {ctor: '::', _0: model.currentCategoryModel.category, _1: model.categories}
-					}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		} else {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						categories: A2(
-							_elm_lang$core$List$filter,
-							function (category) {
-								return !_elm_lang$core$Native_Utils.eq(category.name, _p0._0);
-							},
-							model.categories)
-					}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		}
-	});
 var _user$project$Main$init = {
 	ctor: '_Tuple2',
 	_0: {
@@ -19779,119 +19876,17 @@ var _user$project$Main$Model = F3(
 	function (a, b, c) {
 		return {categories: a, currentCategoryModel: b, isPopUpActive: c};
 	});
-var _user$project$Main$Delete = function (a) {
-	return {ctor: 'Delete', _0: a};
-};
-var _user$project$Main$Add = {ctor: 'Add'};
 var _user$project$Main$CancelEditCategory = {ctor: 'CancelEditCategory'};
 var _user$project$Main$MsgForCategoryList = function (a) {
 	return {ctor: 'MsgForCategoryList', _0: a};
-};
-var _user$project$Main$renderCategory = function (category) {
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$div,
-		{
-			ctor: '::',
-			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('categoryItem'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Style$categoryItemButton,
-			_1: {
-				ctor: '::',
-				_0: _user$project$Style$categoryItemOnHover,
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_rtfeldman$elm_css$Html_Styled$a,
-						{
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('button is-link is-rounded'),
-							_1: {
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$href(category.name),
-								_1: {ctor: '[]'}
-							}
-						},
-						{
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled$text(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									category.name,
-									_user$project$Main$renderNumberLinks(category.links))),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_rtfeldman$elm_css$Html_Styled$a,
-							{
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$id('deleteCategory'),
-								_1: {
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('delete is-small'),
-									_1: {
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(
-											_user$project$Main$MsgForCategoryList(
-												_user$project$Main$Delete(category.name))),
-										_1: {ctor: '[]'}
-									}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$categories = function (categories) {
-	var _p1 = _elm_lang$core$List$length(categories);
-	if (_p1 === 0) {
-		return A2(
-			_rtfeldman$elm_css$Html_Styled$div,
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-					{
-						ctor: '::',
-						_0: _user$project$Style$listCategories,
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled$text('Liste désespéremment vide...'),
-				_1: {ctor: '[]'}
-			});
-	} else {
-		return A2(
-			_rtfeldman$elm_css$Html_Styled$div,
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-					{
-						ctor: '::',
-						_0: _user$project$Style$listCategories,
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			},
-			A2(_elm_lang$core$List$map, _user$project$Main$renderCategory, categories));
-	}
 };
 var _user$project$Main$MsgForCategory = function (a) {
 	return {ctor: 'MsgForCategory', _0: a};
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
 			case 'TogglePopup':
 				return {
 					ctor: '_Tuple2',
@@ -19901,9 +19896,9 @@ var _user$project$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'MsgForCategory':
-				var _p3 = A2(_user$project$Category_Update$update, _p2._0, model.currentCategoryModel);
-				var categoryModel = _p3._0;
-				var cmdMsg = _p3._1;
+				var _p1 = A2(_user$project$Category_Update$update, _p0._0, model.currentCategoryModel);
+				var categoryModel = _p1._0;
+				var cmdMsg = _p1._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -19912,10 +19907,28 @@ var _user$project$Main$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$MsgForCategory, cmdMsg)
 				};
 			case 'MsgForCategoryList':
-				var _p4 = A2(_user$project$Main$updateCategoryList, _p2._0, model);
-				var categoryListModel = _p4._0;
-				var cmdMsg = _p4._1;
-				return {ctor: '_Tuple2', _0: categoryListModel, _1: cmdMsg};
+				var _p4 = _p0._0;
+				var _p2 = A2(_user$project$CategoryList_Update$update, _p4, model.categories);
+				var categoryListModel = _p2._0;
+				var cmdMsg = _p2._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							categories: categoryListModel,
+							isPopUpActive: function () {
+								var _p3 = _p4;
+								if (_p3.ctor === 'Add') {
+									return !model.isPopUpActive;
+								} else {
+									return model.isPopUpActive;
+								}
+							}(),
+							currentCategoryModel: _user$project$Category_Model$emptyModel
+						}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$MsgForCategoryList, cmdMsg)
+				};
 			default:
 				return {
 					ctor: '_Tuple2',
@@ -20104,7 +20117,8 @@ var _user$project$Main$renderModal = function (model) {
 													_1: {
 														ctor: '::',
 														_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(
-															_user$project$Main$MsgForCategoryList(_user$project$Main$Add)),
+															_user$project$Main$MsgForCategoryList(
+																_user$project$CategoryList_Update$Add(model.currentCategoryModel.category))),
 														_1: {ctor: '[]'}
 													}
 												}
@@ -20171,7 +20185,10 @@ var _user$project$Main$view = function (model) {
 					_0: _user$project$Main$subbandeau,
 					_1: {
 						ctor: '::',
-						_0: _user$project$Main$categories(model.categories),
+						_0: A2(
+							_rtfeldman$elm_css$Html_Styled$map,
+							_user$project$Main$MsgForCategoryList,
+							_user$project$CategoryList_View$view(model.categories)),
 						_1: {
 							ctor: '::',
 							_0: model.isPopUpActive ? _user$project$Main$renderModal(model) : _rtfeldman$elm_css$Html_Styled$text(''),
@@ -20198,7 +20215,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"message":"Main.Msg","aliases":{},"unions":{"Main.Msg":{"tags":{"CancelEditCategory":[],"MsgForCategory":["Category.Update.Msg"],"TogglePopup":[],"MsgForCategoryList":["Main.CategoryListMsg"]},"args":[]},"Category.Update.Msg":{"tags":{"Edit":["String"]},"args":[]},"Main.CategoryListMsg":{"tags":{"Delete":["String"],"Add":[]},"args":[]}}},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"message":"Main.Msg","aliases":{"Category.Model.Category":{"type":"{ name : String, links : List Category.Model.Link }","args":[]},"Category.Model.Link":{"type":"String","args":[]}},"unions":{"Main.Msg":{"tags":{"CancelEditCategory":[],"MsgForCategory":["Category.Update.Msg"],"TogglePopup":[],"MsgForCategoryList":["CategoryList.Update.Msg"]},"args":[]},"CategoryList.Update.Msg":{"tags":{"Delete":["String"],"Add":["Category.Model.Category"]},"args":[]},"Category.Update.Msg":{"tags":{"Edit":["String"]},"args":[]}}},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

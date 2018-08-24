@@ -19395,7 +19395,7 @@ var _user$project$Category_Update$modelValidator = _rtfeldman$elm_validate$Valid
 var _user$project$Category_Update$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		var currentCategory = {name: _p0._0, links: model.category.links};
+		var currentCategory = A2(_user$project$Category_Model$Category, _p0._0, model.category.links);
 		var _p1 = A2(_rtfeldman$elm_validate$Validate$validate, _user$project$Category_Update$modelValidator, currentCategory);
 		if (_p1.ctor === '[]') {
 			return {
@@ -19868,13 +19868,14 @@ var _user$project$Main$init = {
 	_0: {
 		categories: {ctor: '[]'},
 		isPopUpActive: false,
-		currentCategoryModel: _user$project$Category_Model$emptyModel
+		currentCategoryModel: _user$project$Category_Model$emptyModel,
+		errors: {ctor: '[]'}
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {categories: a, currentCategoryModel: b, isPopUpActive: c};
+var _user$project$Main$Model = F4(
+	function (a, b, c, d) {
+		return {categories: a, currentCategoryModel: b, errors: c, isPopUpActive: d};
 	});
 var _user$project$Main$CancelEditCategory = {ctor: 'CancelEditCategory'};
 var _user$project$Main$MsgForCategoryList = function (a) {

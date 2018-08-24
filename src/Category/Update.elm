@@ -11,10 +11,8 @@ update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         Edit name ->
-            -- ({ model | category = { name = name, links = model.category.links }  }, Cmd.none)
             let
-                currentCategory =
-                    { name = name, links = model.category.links }
+                currentCategory = Category name model.category.links
             in
                 case validate modelValidator currentCategory of
                     [] ->
@@ -22,12 +20,6 @@ update msg model =
 
                     errors ->
                         ( { model | errors = errors }, Cmd.none )
-
---         CancelEditCategory ->
---             ( { model | currentCategory = Nothing, isPopUpActive = False }, Cmd.none )
-
---         DeleteCategory ->
---             (model, Cmd.none)
 
 
 modelValidator : Validator String Category

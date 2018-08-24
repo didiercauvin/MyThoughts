@@ -13,6 +13,7 @@ import CategoryList.View
 type alias Model =
     { categories : CategoryList.Model.Model
     , currentCategoryModel : Category.Model.Model
+    , errors : List String
     , isPopUpActive : Bool
     }
 
@@ -24,7 +25,11 @@ type Msg
 
 init : (Model, Cmd Msg)
 init =
-    ({ categories = [], isPopUpActive = False, currentCategoryModel = Category.Model.emptyModel }, Cmd.none)
+    ({ categories = []
+     , isPopUpActive = False
+     , currentCategoryModel = Category.Model.emptyModel 
+     , errors = []
+     }, Cmd.none)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -99,7 +104,7 @@ renderModal model =
         , section [ class "modal-card-body" ]
             [ HtmlStyled.map MsgForCategory (Category.View.view model.currentCategoryModel) ]
         , footer [ class "modal-card-foot" ]
-            [ button [ class "button is-link", attribute "aria-label" "rien", onClick (MsgForCategoryList ( Add model.currentCategoryModel.category ) ) ]
+            [ button [ class "button is-link", attribute "aria-label" "rien", onClick <| MsgForCategoryList <| Add model.currentCategoryModel.category ]
                 [ text "Valider" ]
             , button [ class "button", onClick CancelEditCategory, attribute "aria-label" "cancel" ]
                 [ text "Annuler" ]

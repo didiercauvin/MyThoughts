@@ -1,7 +1,7 @@
 import Html
 import Html.Styled.Events exposing (onClick, onInput)
 import Html.Styled as HtmlStyled exposing (input, div, h1, h2, text, toUnstyled, Html, span, button, a, node, header, footer, section, p)
-import Html.Styled.Attributes exposing (id, css, href, rel, class, attribute, placeholder)
+import Html.Styled.Attributes exposing (id, css, href, rel, class, attribute, placeholder, value)
 import Style
 import Category.Model exposing (..)
 import Category.Update
@@ -12,19 +12,23 @@ import CategoryList.View
 
 type alias Model =
     { categories : CategoryList.Model.Model
+    , newCategoryName : String
     , currentCategoryModel : Category.Model.Model
     , isPopUpActive : Bool
+    , errors : List String
     }
 
 type Msg 
     = TogglePopup
+    | EditCategory String
+    | AppendCategory
     | MsgForCategory Category.Update.Msg
     | MsgForCategoryList CategoryList.Update.Msg
     | CancelEditCategory
 
 init : (Model, Cmd Msg)
 init =
-    ({ categories = [], isPopUpActive = False, currentCategoryModel = Category.Model.emptyModel }, Cmd.none)
+    ({ categories = [], newCategoryName = "", isPopUpActive = False, currentCategoryModel = Category.Model.emptyModel, errors = [] }, Cmd.none)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -55,6 +59,20 @@ update msg model =
 
         CancelEditCategory ->
             ( { model | isPopUpActive = not model.isPopUpActive, currentCategoryModel = Category.Model.emptyModel }, Cmd.none)
+        
+        EditCategory name ->
+            ({ model | newCategoryName = name }, Cmd.none)
+
+        AppendCategory ->
+            if String.isEmpty model.newCategoryName then
+                (model, Cmd.none)
+            else
+                let
+                    categories = model.categories
+                    name = model.newCategoryName
+                in
+                    ({ model | categories = Category name [] :: categories
+                                , newCategoryName = "" }, Cmd.none)
 
 bandeau : Html msg
 bandeau =
@@ -67,7 +85,6 @@ subbandeau : Html Msg
 subbandeau =
     div [ css [ Style.subheader ]]
         [  h2 [] [ text "Mes catégories" ]
-        ,  span [ css [ Style.create ] ] [ a [ class "button is-primary is-rounded", onClick TogglePopup ] [ text "Créer" ] ]
         ]
 
 view : Model -> (Html Msg)
@@ -76,6 +93,7 @@ view model =
         [ Style.bulma 
         , bandeau
         , subbandeau
+        , renderCategoryForm model
         , HtmlStyled.map MsgForCategoryList (CategoryList.View.view model.categories)
         , if model.isPopUpActive then
             renderModal model
@@ -105,6 +123,14 @@ renderModal model =
                 [ text "Annuler" ]
         ]
         ]]
+
+renderCategoryForm : Model -> Html Msg
+renderCategoryForm model =
+    div [ class "control" ] 
+        [ input [ class "input", placeholder "Nom...", value model.newCategoryName, onInput EditCategory ] 
+                [ text "" ]
+        , span [ css [ Style.create ] ] [ a [ class "button is-primary is-rounded", onClick AppendCategory ] [ text "Créer" ] ]
+        ]
 
 main =
     Html.program

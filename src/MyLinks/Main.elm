@@ -1,19 +1,21 @@
+module MyLinks.Main exposing (..)
+
 import Html
 import Html.Styled.Events exposing (onClick, onInput)
 import Html.Styled as HtmlStyled exposing (input, div, h1, h2, text, toUnstyled, Html, span, button, a, node, header, footer, section, p)
 import Html.Styled.Attributes exposing (id, css, href, rel, class, attribute, placeholder, value)
-import Style
-import Category.Model exposing (..)
-import Category.Update
-import Category.View
-import CategoryList.Model exposing (..)
-import CategoryList.Update exposing (..)
-import CategoryList.View
+import MyLinks.Style as Style
+import MyLinks.Category.Model as CategoryModel exposing (..)
+import MyLinks.Category.Update as CategoryUpdate
+import MyLinks.Category.View as CategoryView
+import MyLinks.CategoryList.Model as CategoryListModel exposing (..)
+import MyLinks.CategoryList.Update as CategoryListUpdate exposing (..)
+import MyLinks.CategoryList.View as CategoryListView
 
 type alias Model =
-    { categories : CategoryList.Model.Model
-    , newCategoryName : String
-    , currentCategoryModel : Category.Model.Model
+    { categories : CategoryListModel.Model
+    , newCategory : Category
+    , currentCategoryModel : CategoryModel.Model
     , errors : List String
     , isPopUpActive : Bool
     , errors : List String
@@ -23,21 +25,18 @@ type Msg
     = TogglePopup
     | EditCategory String
     | AppendCategory
-    | MsgForCategory Category.Update.Msg
-    | MsgForCategoryList CategoryList.Update.Msg
+    | MsgForCategory CategoryUpdate.Msg
+    | MsgForCategoryList CategoryListUpdate.Msg
     | CancelEditCategory
 
 init : (Model, Cmd Msg)
 init =
-<<<<<<< HEAD
     ({ categories = []
+     , newCategory = Category "" []
      , isPopUpActive = False
-     , currentCategoryModel = Category.Model.emptyModel 
+     , currentCategoryModel = CategoryModel.emptyModel 
      , errors = []
      }, Cmd.none)
-=======
-    ({ categories = [], newCategoryName = "", isPopUpActive = False, currentCategoryModel = Category.Model.emptyModel, errors = [] }, Cmd.none)
->>>>>>> tmp
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -48,14 +47,14 @@ update msg model =
         MsgForCategory msg ->
             let
                 (categoryModel, cmdMsg) =
-                    Category.Update.update msg model.currentCategoryModel
+                    CategoryUpdate.update msg model.currentCategoryModel
             in
                 ( { model | currentCategoryModel = categoryModel }, Cmd.map MsgForCategory cmdMsg )
 
         MsgForCategoryList msg ->
             let
                 (categoryListModel, cmdMsg) =   
-                    CategoryList.Update.update msg model.categories
+                    CategoryListUpdate.update msg model.categories
             in
                 ( { model | categories = categoryListModel
                           , isPopUpActive = case msg of
@@ -63,30 +62,34 @@ update msg model =
                                                      not model.isPopUpActive
                                                 Delete _ ->
                                                     model.isPopUpActive
-                          , currentCategoryModel = Category.Model.emptyModel 
+                          , currentCategoryModel = CategoryModel.emptyModel 
                   } , Cmd.map MsgForCategoryList cmdMsg )
 
         CancelEditCategory ->
-            ( { model | isPopUpActive = not model.isPopUpActive, currentCategoryModel = Category.Model.emptyModel }, Cmd.none)
+            ( { model | isPopUpActive = not model.isPopUpActive, currentCategoryModel = CategoryModel.emptyModel }, Cmd.none)
         
         EditCategory name ->
-            ({ model | newCategoryName = name }, Cmd.none)
+            let
+                category = Category name []
+            in
+            
+            ({ model | newCategory = category }, Cmd.none)
 
         AppendCategory ->
-            if String.isEmpty model.newCategoryName then
+            if String.isEmpty model.newCategory.name then
                 (model, Cmd.none)
             else
                 let
                     categories = model.categories
-                    name = model.newCategoryName
+                    category = model.newCategory
                 in
-                    ({ model | categories = Category name [] :: categories
-                                , newCategoryName = "" }, Cmd.none)
+                    ({ model | categories = category :: categories
+                                , newCategory = Category "" [] }, Cmd.none)
 
 bandeau : Html msg
 bandeau =
     div [ css [ Style.mainHeader ] ] 
-        [ h1 [ css [ Style.title ] ] [ text "MyThoughts" ]
+        [ h1 [ css [ Style.title ] ] [ text "MyLinks" ]
         , span [ css [ Style.tagline ] ] [ text "Pour mettre de côté mes liens utiles" ]
         ]
 
@@ -103,7 +106,7 @@ view model =
         , bandeau
         , subbandeau
         , renderCategoryForm model
-        , HtmlStyled.map MsgForCategoryList (CategoryList.View.view model.categories)
+        , HtmlStyled.map MsgForCategoryList (CategoryListView.view model.categories)
         , if model.isPopUpActive then
             renderModal model
           else
@@ -124,7 +127,7 @@ renderModal model =
                 []
             ]
         , section [ class "modal-card-body" ]
-            [ HtmlStyled.map MsgForCategory (Category.View.view model.currentCategoryModel) ]
+            [ HtmlStyled.map MsgForCategory (CategoryView.view model.currentCategoryModel) ]
         , footer [ class "modal-card-foot" ]
             [ button [ class "button is-link", attribute "aria-label" "rien", onClick <| MsgForCategoryList <| Add model.currentCategoryModel.category ]
                 [ text "Valider" ]
@@ -136,7 +139,7 @@ renderModal model =
 renderCategoryForm : Model -> Html Msg
 renderCategoryForm model =
     div [ class "control" ] 
-        [ input [ class "input", placeholder "Nom...", value model.newCategoryName, onInput EditCategory ] 
+        [ input [ class "input", placeholder "Nom...", value model.newCategory.name, onInput EditCategory ] 
                 [ text "" ]
         , span [ css [ Style.create ] ] [ a [ class "button is-primary is-rounded", onClick AppendCategory ] [ text "Créer" ] ]
         ]

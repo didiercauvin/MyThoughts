@@ -1,4 +1,4 @@
-module Category.Model exposing (..)
+module MyLinks.Category.Model exposing (..)
 
 type alias Model = 
     { category : Category

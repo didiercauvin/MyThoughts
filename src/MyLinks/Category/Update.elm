@@ -1,7 +1,7 @@
-module Category.Update exposing (..)
+module MyLinks.Category.Update exposing (..)
 
 import Validate exposing (Validator, ifBlank, validate)
-import Category.Model exposing (..)
+import MyLinks.Category.Model exposing (..)
 
 type Msg 
     = Edit String

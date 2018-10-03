@@ -1,7 +1,7 @@
-module CategoryList.Update exposing (..)
+module MyLinks.CategoryList.Update exposing (..)
 
-import Category.Model exposing (Category)
-import CategoryList.Model exposing (..)
+import MyLinks.Category.Model exposing (Category)
+import MyLinks.CategoryList.Model exposing (..)
 
 type Msg
     = Add Category

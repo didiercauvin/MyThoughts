@@ -1,13 +1,13 @@
-module CategoryList.View exposing (..)
+module MyLinks.CategoryList.View exposing (..)
 
 import Html.Styled.Events exposing (onClick)
 import Html.Styled exposing (input, div, h1, h2, text, toUnstyled, Html, span, button, a, node, header, footer, section, p)
 import Html.Styled.Attributes exposing (id, css, href, rel, class, attribute, placeholder, value)
-import Category.Model exposing (Category, Link)
-import CategoryList.Model exposing (..)
-import CategoryList.Update exposing (..)
+import MyLinks.Category.Model exposing (Category, Link)
+import MyLinks.CategoryList.Model exposing (..)
+import MyLinks.CategoryList.Update exposing (..)
 
-import Style
+import MyLinks.Style as Style
 
 view : Model -> Html Msg
 view model =

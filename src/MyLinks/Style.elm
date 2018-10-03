@@ -1,4 +1,4 @@
-module Style exposing (..)
+module MyLinks.Style exposing (..)
 
 import Html.Styled exposing (Html, node)
 import Html.Styled.Attributes exposing (href, rel)
@@ -6,7 +6,7 @@ import Css exposing (..)
 import Css.Foreign exposing (..)
 
 content : Style
-content =
+content = 
     Css.batch
         [   width (px 1060)
         ,   margin2 (px 0) auto

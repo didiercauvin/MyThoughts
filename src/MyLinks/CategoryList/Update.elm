@@ -6,12 +6,22 @@ import MyLinks.CategoryList.Model exposing (..)
 type Msg
     = Add Category
     | Delete String
+    | NoOp
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         Add category->
-            (category :: model, Cmd.none)
+            let
+                categories = category :: model.categories
+            in
+                ( { model | categories = categories }, Cmd.none)
         
         Delete name ->
-            ( (List.filter (\category -> category.name /= name) model) , Cmd.none )
+            let
+                categories = List.filter (\category -> category.name /= name) model.categories
+            in
+                ( { model | categories = categories }, Cmd.none )
+
+        NoOp ->
+            ( model, Cmd.none )

@@ -31,7 +31,7 @@ type Msg
 
 init : (Model, Cmd Msg)
 init =
-    ({ categories = []
+    ({ categories = CategoryListModel.emptyModel
      , newCategory = Category "" []
      , isPopUpActive = False
      , currentCategoryModel = CategoryModel.emptyModel 
@@ -62,6 +62,8 @@ update msg model =
                                                      not model.isPopUpActive
                                                 Delete _ ->
                                                     model.isPopUpActive
+                                                NoOp ->
+                                                    model.isPopUpActive
                           , currentCategoryModel = CategoryModel.emptyModel 
                   } , Cmd.map MsgForCategoryList cmdMsg )
 
@@ -80,10 +82,10 @@ update msg model =
                 (model, Cmd.none)
             else
                 let
-                    categories = model.categories
+                    categories = model.categories.categories
                     category = model.newCategory
                 in
-                    ({ model | categories = category :: categories
+                    ({ model | categories = CategoryListModel.Model (category :: categories) False
                                 , newCategory = Category "" [] }, Cmd.none)
 
 bandeau : Html msg

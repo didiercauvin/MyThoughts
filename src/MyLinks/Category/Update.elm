@@ -2,9 +2,11 @@ module MyLinks.Category.Update exposing (..)
 
 import Validate exposing (Validator, ifBlank, validate)
 import MyLinks.Category.Model exposing (..)
+import MyLinks.LinkList.Update as LinkListUpdate
 
 type Msg 
     = Edit String
+    | MsgForLinkList LinkListUpdate.Msg
 
 
 update: Msg -> Model -> (Model, Cmd Msg)
@@ -20,7 +22,13 @@ update msg model =
 
                     errors ->
                         ( { model | errors = errors }, Cmd.none )
-
+        
+        MsgForLinkList msg ->
+            let
+                (linkListModel, cmdMsg) =
+                    LinkListUpdate.update msg model.category.links
+            in
+                ( model, Cmd.none )
 
 modelValidator : Validator String Category
 modelValidator =

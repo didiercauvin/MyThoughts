@@ -1,6 +1,7 @@
 module MyLinks.Category.Model exposing (..)
 
-import MyLinks.Link.Model exposing (Link)
+-- import MyLinks.Link.Model exposing (Link)
+import MyLinks.LinkList.Model as LinkListModel exposing (..)
 
 type alias Model = 
     { category : Category
@@ -10,7 +11,7 @@ type alias Model =
 
 type alias Category =
     { name : String
-    , links : List Link
+    , links : LinkListModel.Model
     }
 
 emptyModel : Model

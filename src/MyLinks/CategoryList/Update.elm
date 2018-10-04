@@ -6,7 +6,7 @@ import MyLinks.CategoryList.Model exposing (..)
 type Msg
     = Add Category
     | Delete String
-    | NoOp
+    | Select String
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -23,5 +23,8 @@ update msg model =
             in
                 ( { model | categories = categories }, Cmd.none )
 
-        NoOp ->
-            ( model, Cmd.none )
+        Select name ->
+            let
+                category = List.head (List.filter (\category -> category.name == name) model.categories)
+            in
+                ( { model | selectedCategory = category }, Cmd.none)

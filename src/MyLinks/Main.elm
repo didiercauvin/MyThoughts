@@ -62,9 +62,13 @@ update msg model =
                                                      not model.isPopUpActive
                                                 Delete _ ->
                                                     model.isPopUpActive
-                                                NoOp ->
-                                                    model.isPopUpActive
-                          , currentCategoryModel = CategoryModel.emptyModel 
+                                                Select _ ->
+                                                    not model.isPopUpActive
+                          , currentCategoryModel = case categoryListModel.selectedCategory of
+                                                    Nothing ->
+                                                        CategoryModel.emptyModel 
+                                                    Just category ->
+                                                        CategoryModel.Model category []
                   } , Cmd.map MsgForCategoryList cmdMsg )
 
         CancelEditCategory ->
@@ -85,7 +89,7 @@ update msg model =
                     categories = model.categories.categories
                     category = model.newCategory
                 in
-                    ({ model | categories = CategoryListModel.Model (category :: categories) False
+                    ({ model | categories = CategoryListModel.Model (category :: categories) Nothing
                                 , newCategory = Category "" [] }, Cmd.none)
 
 bandeau : Html msg
@@ -124,7 +128,7 @@ renderModal model =
         , div [ class "modal-card" ]
         [ header [ class "modal-card-head" ]
             [ p [ class "modal-card-title" ]
-                [ text "Nouvelle catégorie" ]
+                [ text "Fiche catégorie" ]
             , button [ class "delete", onClick CancelEditCategory, attribute "aria-label" "close" ]
                 []
             ]

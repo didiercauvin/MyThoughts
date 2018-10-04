@@ -4,11 +4,11 @@ import MyLinks.Category.Model exposing (..)
 
 type alias Model = 
     {   categories : List Category
-    ,   isPopUpActive : Bool
+    ,   selectedCategory : Maybe Category
     }
 
 emptyModel : Model
 emptyModel = 
     {   categories = []
-    ,   isPopUpActive = False
+    ,   selectedCategory = Nothing
     }

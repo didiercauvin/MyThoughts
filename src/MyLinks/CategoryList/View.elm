@@ -23,7 +23,7 @@ renderCategory category =
     div [ class "categoryItem"  ] 
          [   Style.categoryItemButton   
          ,   Style.categoryItemOnHover 
-         ,   a [ class "button is-link is-rounded", onClick NoOp ]
+         ,   a [ class "button is-link is-rounded", onClick (Select category.name) ]
                 [ text (category.name ++ renderNumberLinks category.links) 
                 ]
                   

@@ -1,4 +1,4 @@
-module MyLinks.Style exposing (..)
+module Style exposing (..)
 
 import Html.Styled exposing (Html, node)
 import Html.Styled.Attributes exposing (href, rel)
@@ -12,29 +12,6 @@ content =
         ,   margin2 (px 0) auto
         ,   padding (px 30)
         ,   fontFamilies [ "Helvetica", "Arial", "serif" ]
-        ]
-
-mainHeader : Style
-mainHeader =    
-    Css.batch
-        [   position relative
-        ,   padding (px 6)
-        ,   height (px 36)
-        ,   backgroundColor (rgb 96 181 204)
-        ]
-
-subheader : Style
-subheader =
-    Css.batch
-        [   position relative
-        ,   padding (px 6)
-        ,   height (px 36)
-        ]
-
-listCategories : Style
-listCategories =
-    Css.batch
-        [ paddingTop (px 50)
         ]
 
 title : Style
@@ -72,11 +49,5 @@ bulma : Html msg
 bulma =
     addCss "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css"
 
-categoryItemButton : Html msg
-categoryItemButton =
-    global [ selector "#deleteCategory" [ display none ] ]
 
-categoryItemOnHover : Html msg
-categoryItemOnHover =
-    global [ selector ".categoryItem:hover #deleteCategory" [ display inlineBlock ] ] 
         

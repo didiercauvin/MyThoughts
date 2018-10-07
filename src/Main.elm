@@ -1,39 +1,46 @@
-module Main exposing (..)
+module Main exposing (Model(..), Msg(..), init, main, update, view)
 
-import Html
-import Html.Styled as HtmlStyled exposing (toUnstyled, Html)
+import Browser
+import Html.Styled as HtmlStyled exposing (Html, toUnstyled)
 import Page
 import Page.Category as Category
+
 
 type Model
     = Category Category.Model
 
+
 type Msg
     = CategoryMsg Category.Msg
 
-init : (Model, Cmd Msg)
+
+init : ( Model, Cmd Msg )
 init =
-    (Category Category.initModel, Cmd.none)
+    ( Category Category.initModel, Cmd.none )
 
-update : Msg -> Model -> (Model, Cmd Msg)
-update msg model =
-    case (msg, model) of
-        (CategoryMsg msg, Category category) ->
+
+update : Msg -> (Model, Cmd Msg) -> ( Model, Cmd Msg )
+update msg (model, _) =
+    case ( msg, model ) of
+        ( CategoryMsg categoryMsg, Category category ) ->
             let
-                (categoryModel, cmdMsg) = Category.update msg category
+                ( categoryModel, cmdMsg ) =
+                    Category.update categoryMsg category
             in
-                ( Category categoryModel, Cmd.map CategoryMsg cmdMsg )
+            ( Category categoryModel, Cmd.map CategoryMsg cmdMsg )
 
-view : Model -> (Html Msg)
-view model =
+
+view : (Model, Cmd Msg) -> Html Msg
+view (model, _) =
     case model of
         Category category ->
             HtmlStyled.map CategoryMsg (Page.view (Category.view category))
 
+
 main =
-    Html.program
-    {   init = init
-    ,   view = view >> toUnstyled
-    ,   update = update
-    ,   subscriptions = (\_ -> Sub.none)
-    }
+    Browser.sandbox
+        { init = init
+        , view = view >> toUnstyled
+        , update = update
+        -- , subscriptions = \_ -> Sub.none
+        }

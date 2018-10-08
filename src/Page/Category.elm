@@ -15,6 +15,7 @@ type alias Model =
     , selectedCategory : Maybe Category
     , isOnCategoryHover : Bool
     , isPopUpActive : Bool
+    , id : Int
     , errors : List String
     }
 
@@ -22,12 +23,12 @@ type alias Model =
 type Msg
     = Edit String
     | Append
-    | Select String
-    | Delete String
+    | Select Int
+    | Delete Int
     | TogglePopup
     | ModifyTitle
-
-
+    | Update String
+    -- | Modify
 
 -- | Cancel
 
@@ -90,10 +91,10 @@ viewCategory category =
     div [ class "categoryItem" ]
         [ styleItemButton
         , styleItemOnHover
-        , a [ class "button is-link is-rounded", onClick (Select category.name) ]
+        , a [ class "button is-link is-rounded", onClick (Select category.id) ]
             [ text (category.name ++ getNumberLinks category.links)
             ]
-        , a [ id "deleteCategory", class "delete is-small", onClick (Delete category.name) ] []
+        , a [ id "deleteCategory", class "delete is-small", onClick (Delete category.id) ] []
         ]
 
 
@@ -109,8 +110,10 @@ editCategory model =
                         [ div [ class "modal-card-title" ]
                             [ div []
                                 [ if model.isOnCategoryHover then
-                                    span [ id "categoryTitleEdit" ] [ input [ class "input", placeholder "Nom...", value category.name ] [] ]
-
+                                    div [] 
+                                        [ span [ id "categoryTitleEdit" ] [ input [ class "input", placeholder "Nom...", value category.name, onInput Update ] [] ]
+                                        , span [ css [ Style.create ] ] [ a [ class "button is-primary is-rounded" ] [ text "Modifier" ] ]
+                                        ]
                                   else
                                     span [ id "categoryTitle", onClick ModifyTitle ] [ text category.name ]
                                 ]
@@ -149,26 +152,34 @@ update msg model =
         Edit name ->
             ( { model | newCategoryName = name }, Cmd.none )
 
+        Update name ->
+            case model.selectedCategory of
+                Nothing ->
+                    (model, Cmd.none)
+            
+                Just category ->
+                    ( { model | selectedCategory = Just { category | name = name } }, Cmd.none)
+
         Append ->
             if String.isEmpty model.newCategoryName then
                 ( model, Cmd.none )
-
             else
                 let
                     categories =
-                        Category model.newCategoryName [] :: model.categories
+                        Category model.id model.newCategoryName [] :: model.categories
                 in
                 ( { model
                     | categories = categories
                     , newCategoryName = ""
+                    , id = model.id + 1
                   }
                 , Cmd.none
                 )
 
-        Select name ->
+        Select id ->
             let
                 category =
-                    List.head (List.filter (\cat -> cat.name == name) model.categories)
+                    List.head (List.filter (\cat -> cat.id == id) model.categories)
             in
             ( { model
                 | selectedCategory = category
@@ -177,10 +188,10 @@ update msg model =
             , Cmd.none
             )
 
-        Delete name ->
+        Delete id ->
             let
                 categories =
-                    List.filter (\cat -> cat.name /= name) model.categories
+                    List.filter (\cat -> cat.id /= id) model.categories
             in
             ( { model | categories = categories }, Cmd.none )
 
@@ -196,6 +207,13 @@ update msg model =
         ModifyTitle ->
             ( { model | isOnCategoryHover = True }, Cmd.none )
 
+        -- Modify ->
+        --     let
+        --         category =
+        --             List.head (List.filter (\cat -> cat.name == name) model.categories)
+        --     in
+            
+
 
 getNumberLinks : List Link -> String
 getNumberLinks links =
@@ -209,5 +227,6 @@ initModel =
     , selectedCategory = Nothing
     , isOnCategoryHover = False
     , isPopUpActive = False
+    , id = 0
     , errors = []
     }

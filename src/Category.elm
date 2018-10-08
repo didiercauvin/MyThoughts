@@ -2,7 +2,8 @@ module Category exposing (Category, Link)
 
 
 type alias Category =
-    { name : String
+    { id : Int
+    , name : String
     , links : List Link
     }
 

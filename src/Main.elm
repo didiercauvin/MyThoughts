@@ -13,7 +13,6 @@ type Model
 type Msg
     = CategoryMsg Category.Msg
 
-
 init : ( Model, Cmd Msg )
 init =
     ( Category Category.initModel, Cmd.none )

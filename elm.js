@@ -5473,35 +5473,33 @@ var author$project$Page$Category$update = F2(
 						elm$core$Platform$Cmd$none);
 				}
 			case 'AppendLink':
-				if (elm$core$String$isEmpty(model.newLinkName)) {
-					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-				} else {
-					var _n1 = model.selectedCategory;
-					if (_n1.$ === 'Nothing') {
-						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-					} else {
-						var category = _n1.a;
-						var links = A2(elm$core$List$cons, model.newLinkName, category.links);
-						var updateCategories = function (c) {
-							return _Utils_eq(c.id, category.id) ? elm$core$Maybe$Just(
-								_Utils_update(
-									category,
-									{links: links})) : elm$core$Maybe$Just(c);
-						};
-						var categories = A2(elm$core$List$filterMap, updateCategories, model.categories);
-						return _Utils_Tuple2(
+				var _n1 = _Utils_Tuple2(
+					model.selectedCategory,
+					elm$core$String$isEmpty(model.newLinkName));
+				if ((_n1.a.$ === 'Just') && _n1.b) {
+					var category = _n1.a.a;
+					var links = A2(elm$core$List$cons, model.newLinkName, category.links);
+					var updateCategories = function (c) {
+						return _Utils_eq(c.id, category.id) ? elm$core$Maybe$Just(
 							_Utils_update(
-								model,
-								{
-									categories: categories,
-									newLinkName: '',
-									selectedCategory: elm$core$Maybe$Just(
-										_Utils_update(
-											category,
-											{links: links}))
-								}),
-							elm$core$Platform$Cmd$none);
-					}
+								category,
+								{links: links})) : elm$core$Maybe$Just(c);
+					};
+					var categories = A2(elm$core$List$filterMap, updateCategories, model.categories);
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								categories: categories,
+								newLinkName: '',
+								selectedCategory: elm$core$Maybe$Just(
+									_Utils_update(
+										category,
+										{links: links}))
+							}),
+						elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 				}
 			case 'Select':
 				var id = msg.a;

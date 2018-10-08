@@ -35,7 +35,6 @@ type Msg
 
 -- | Cancel
 
-
 styleListCategories : Style
 styleListCategories =
     Css.batch
@@ -183,31 +182,26 @@ update msg model =
                 )
             
         AppendLink ->
-            if String.isEmpty model.newLinkName then
-                (model, Cmd.none)
-            else
-                case model.selectedCategory of
-                    Nothing ->
-                        (model, Cmd.none)
-                    Just category ->
-                        let
-                            links = model.newLinkName :: category.links
-                            
-                            updateCategories c =
-                                if c.id == category.id then
-                                    Just { category | links = links }
-                                else
-                                    Just c
+            case (model.selectedCategory, String.isEmpty model.newLinkName) of
+                (Just category, True) ->
+                    let
+                        links = model.newLinkName :: category.links
+                        
+                        updateCategories c =
+                            if c.id == category.id then
+                                Just { category | links = links }
+                            else
+                                Just c
 
-                            categories = List.filterMap updateCategories model.categories
-                            -- category = { category | links = links }
-                            -- categories = List.head ( List.filter (\cat -> cat.id == category.id) )
-                        in
-                            ( { model | selectedCategory = Just { category | links = links }
-                                      , categories = categories
-                                      , newLinkName = ""
-                              } , Cmd.none )
-                
+                        categories = List.filterMap updateCategories model.categories
+                    in
+                        ( { model | selectedCategory = Just { category | links = links }
+                                    , categories = categories
+                                    , newLinkName = ""
+                            } , Cmd.none )
+
+                (_, _) ->
+                    (model, Cmd.none)
 
         Select id ->
             let

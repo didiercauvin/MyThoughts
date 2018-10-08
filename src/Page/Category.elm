@@ -12,6 +12,7 @@ import Style
 type alias Model =
     { categories : List Category
     , newCategoryName : String
+    , newLinkName : String
     , selectedCategory : Maybe Category
     , isOnCategoryHover : Bool
     , isPopUpActive : Bool
@@ -26,8 +27,10 @@ type Msg
     | Select Int
     | Delete Int
     | TogglePopup
-    | ModifyTitle
-    | Update String
+    | AppendLink
+    | EditLink String
+    -- | ModifyTitle
+    -- | Update String
     -- | Modify
 
 -- | Cancel
@@ -110,17 +113,18 @@ editCategory model =
                         [ div [ class "modal-card-title" ]
                             [ div []
                                 [ if model.isOnCategoryHover then
-                                    div [] 
-                                        [ span [ id "categoryTitleEdit" ] [ input [ class "input", placeholder "Nom...", value category.name, onInput Update ] [] ]
-                                        , span [ css [ Style.create ] ] [ a [ class "button is-primary is-rounded" ] [ text "Modifier" ] ]
-                                        ]
+                                    span [ id "categoryTitleEdit" ] [ input [ class "input", placeholder "Nom...", value category.name ] [] ]
                                   else
-                                    span [ id "categoryTitle", onClick ModifyTitle ] [ text category.name ]
+                                    span [ id "categoryTitle" ] [ text category.name ]
                                 ]
                             ]
                         , button [ class "delete", onClick TogglePopup, attribute "aria-label" "close" ]
                             []
                         ]
+                    , section []
+                              [ input [ class "input", placeholder "Nom...", value model.newLinkName, onInput EditLink ] []
+                              , span [ css [ Style.create ] ] [ a [ class "button is-primary is-rounded", onClick AppendLink ] [ text "Créer" ] ]
+                              ]
                     , section [ class "modal-card-body" ] [ viewLinks category ]
                     ]
                 ]
@@ -133,7 +137,6 @@ viewLinks : Category -> Html Msg
 viewLinks category =
     if List.isEmpty category.links then
         text "Liste de liens désespéremment vide..."
-
     else
         div []
             [ span [] [ text "Liste des liens" ]
@@ -143,7 +146,7 @@ viewLinks category =
 
 viewLink : Link -> Html Msg
 viewLink link =
-    span [] [ text link ]
+    div [] [ text link ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -152,13 +155,16 @@ update msg model =
         Edit name ->
             ( { model | newCategoryName = name }, Cmd.none )
 
-        Update name ->
-            case model.selectedCategory of
-                Nothing ->
-                    (model, Cmd.none)
+        EditLink name ->
+            ( { model | newLinkName = name }, Cmd.none )
+
+        -- Update name ->
+        --     case model.selectedCategory of
+        --         Nothing ->
+        --             (model, Cmd.none)
             
-                Just category ->
-                    ( { model | selectedCategory = Just { category | name = name } }, Cmd.none)
+        --         Just category ->
+        --             ( { model | selectedCategory = Just { category | name = name } }, Cmd.none)
 
         Append ->
             if String.isEmpty model.newCategoryName then
@@ -175,6 +181,33 @@ update msg model =
                   }
                 , Cmd.none
                 )
+            
+        AppendLink ->
+            if String.isEmpty model.newLinkName then
+                (model, Cmd.none)
+            else
+                case model.selectedCategory of
+                    Nothing ->
+                        (model, Cmd.none)
+                    Just category ->
+                        let
+                            links = model.newLinkName :: category.links
+                            
+                            updateCategories c =
+                                if c.id == category.id then
+                                    Just { category | links = links }
+                                else
+                                    Just c
+
+                            categories = List.filterMap updateCategories model.categories
+                            -- category = { category | links = links }
+                            -- categories = List.head ( List.filter (\cat -> cat.id == category.id) )
+                        in
+                            ( { model | selectedCategory = Just { category | links = links }
+                                      , categories = categories
+                                      , newLinkName = ""
+                              } , Cmd.none )
+                
 
         Select id ->
             let
@@ -204,8 +237,8 @@ update msg model =
             , Cmd.none
             )
 
-        ModifyTitle ->
-            ( { model | isOnCategoryHover = True }, Cmd.none )
+        -- ModifyTitle ->
+        --     ( { model | isOnCategoryHover = True }, Cmd.none )
 
         -- Modify ->
         --     let
@@ -224,6 +257,7 @@ initModel : Model
 initModel =
     { categories = []
     , newCategoryName = ""
+    , newLinkName = ""
     , selectedCategory = Nothing
     , isOnCategoryHover = False
     , isPopUpActive = False

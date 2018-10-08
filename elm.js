@@ -4934,7 +4934,7 @@ var elm$core$Set$toList = function (_n0) {
 	var dict = _n0.a;
 	return elm$core$Dict$keys(dict);
 };
-var author$project$Page$Category$initModel = {categories: _List_Nil, errors: _List_Nil, id: 0, isOnCategoryHover: false, isPopUpActive: false, newCategoryName: '', selectedCategory: elm$core$Maybe$Nothing};
+var author$project$Page$Category$initModel = {categories: _List_Nil, errors: _List_Nil, id: 0, isOnCategoryHover: false, isPopUpActive: false, newCategoryName: '', newLinkName: '', selectedCategory: elm$core$Maybe$Nothing};
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -5411,6 +5411,24 @@ var elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
+var elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _n0 = f(mx);
+		if (_n0.$ === 'Just') {
+			var x = _n0.a;
+			return A2(elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
 var elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -5433,24 +5451,13 @@ var author$project$Page$Category$update = F2(
 						model,
 						{newCategoryName: name}),
 					elm$core$Platform$Cmd$none);
-			case 'Update':
+			case 'EditLink':
 				var name = msg.a;
-				var _n1 = model.selectedCategory;
-				if (_n1.$ === 'Nothing') {
-					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-				} else {
-					var category = _n1.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								selectedCategory: elm$core$Maybe$Just(
-									_Utils_update(
-										category,
-										{name: name}))
-							}),
-						elm$core$Platform$Cmd$none);
-				}
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{newLinkName: name}),
+					elm$core$Platform$Cmd$none);
 			case 'Append':
 				if (elm$core$String$isEmpty(model.newCategoryName)) {
 					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
@@ -5464,6 +5471,37 @@ var author$project$Page$Category$update = F2(
 							model,
 							{categories: categories, id: model.id + 1, newCategoryName: ''}),
 						elm$core$Platform$Cmd$none);
+				}
+			case 'AppendLink':
+				if (elm$core$String$isEmpty(model.newLinkName)) {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				} else {
+					var _n1 = model.selectedCategory;
+					if (_n1.$ === 'Nothing') {
+						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+					} else {
+						var category = _n1.a;
+						var links = A2(elm$core$List$cons, model.newLinkName, category.links);
+						var updateCategories = function (c) {
+							return _Utils_eq(c.id, category.id) ? elm$core$Maybe$Just(
+								_Utils_update(
+									category,
+									{links: links})) : elm$core$Maybe$Just(c);
+						};
+						var categories = A2(elm$core$List$filterMap, updateCategories, model.categories);
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									categories: categories,
+									newLinkName: '',
+									selectedCategory: elm$core$Maybe$Just(
+										_Utils_update(
+											category,
+											{links: links}))
+								}),
+							elm$core$Platform$Cmd$none);
+					}
 				}
 			case 'Select':
 				var id = msg.a;
@@ -5492,17 +5530,11 @@ var author$project$Page$Category$update = F2(
 						model,
 						{categories: categories}),
 					elm$core$Platform$Cmd$none);
-			case 'TogglePopup':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{isOnCategoryHover: false, isPopUpActive: !model.isPopUpActive, selectedCategory: elm$core$Maybe$Nothing}),
-					elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{isOnCategoryHover: true}),
+						{isOnCategoryHover: false, isPopUpActive: !model.isPopUpActive, selectedCategory: elm$core$Maybe$Nothing}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -8083,14 +8115,14 @@ var author$project$Page$Category$Append = {$: 'Append'};
 var author$project$Page$Category$Edit = function (a) {
 	return {$: 'Edit', a: a};
 };
-var author$project$Page$Category$ModifyTitle = {$: 'ModifyTitle'};
-var author$project$Page$Category$TogglePopup = {$: 'TogglePopup'};
-var author$project$Page$Category$Update = function (a) {
-	return {$: 'Update', a: a};
+var author$project$Page$Category$AppendLink = {$: 'AppendLink'};
+var author$project$Page$Category$EditLink = function (a) {
+	return {$: 'EditLink', a: a};
 };
+var author$project$Page$Category$TogglePopup = {$: 'TogglePopup'};
 var author$project$Page$Category$viewLink = function (link) {
 	return A2(
-		rtfeldman$elm_css$Html$Styled$span,
+		rtfeldman$elm_css$Html$Styled$div,
 		_List_Nil,
 		_List_fromArray(
 			[
@@ -8244,56 +8276,27 @@ var author$project$Page$Category$editCategory = function (model) {
 											_List_fromArray(
 												[
 													model.isOnCategoryHover ? A2(
-													rtfeldman$elm_css$Html$Styled$div,
-													_List_Nil,
+													rtfeldman$elm_css$Html$Styled$span,
+													_List_fromArray(
+														[
+															rtfeldman$elm_css$Html$Styled$Attributes$id('categoryTitleEdit')
+														]),
 													_List_fromArray(
 														[
 															A2(
-															rtfeldman$elm_css$Html$Styled$span,
+															rtfeldman$elm_css$Html$Styled$input,
 															_List_fromArray(
 																[
-																	rtfeldman$elm_css$Html$Styled$Attributes$id('categoryTitleEdit')
+																	rtfeldman$elm_css$Html$Styled$Attributes$class('input'),
+																	rtfeldman$elm_css$Html$Styled$Attributes$placeholder('Nom...'),
+																	rtfeldman$elm_css$Html$Styled$Attributes$value(category.name)
 																]),
-															_List_fromArray(
-																[
-																	A2(
-																	rtfeldman$elm_css$Html$Styled$input,
-																	_List_fromArray(
-																		[
-																			rtfeldman$elm_css$Html$Styled$Attributes$class('input'),
-																			rtfeldman$elm_css$Html$Styled$Attributes$placeholder('Nom...'),
-																			rtfeldman$elm_css$Html$Styled$Attributes$value(category.name),
-																			rtfeldman$elm_css$Html$Styled$Events$onInput(author$project$Page$Category$Update)
-																		]),
-																	_List_Nil)
-																])),
-															A2(
-															rtfeldman$elm_css$Html$Styled$span,
-															_List_fromArray(
-																[
-																	rtfeldman$elm_css$Html$Styled$Attributes$css(
-																	_List_fromArray(
-																		[author$project$Style$create]))
-																]),
-															_List_fromArray(
-																[
-																	A2(
-																	rtfeldman$elm_css$Html$Styled$a,
-																	_List_fromArray(
-																		[
-																			rtfeldman$elm_css$Html$Styled$Attributes$class('button is-primary is-rounded')
-																		]),
-																	_List_fromArray(
-																		[
-																			rtfeldman$elm_css$Html$Styled$text('Modifier')
-																		]))
-																]))
+															_List_Nil)
 														])) : A2(
 													rtfeldman$elm_css$Html$Styled$span,
 													_List_fromArray(
 														[
-															rtfeldman$elm_css$Html$Styled$Attributes$id('categoryTitle'),
-															rtfeldman$elm_css$Html$Styled$Events$onClick(author$project$Page$Category$ModifyTitle)
+															rtfeldman$elm_css$Html$Styled$Attributes$id('categoryTitle')
 														]),
 													_List_fromArray(
 														[
@@ -8310,6 +8313,44 @@ var author$project$Page$Category$editCategory = function (model) {
 											A2(rtfeldman$elm_css$Html$Styled$Attributes$attribute, 'aria-label', 'close')
 										]),
 									_List_Nil)
+								])),
+							A2(
+							rtfeldman$elm_css$Html$Styled$section,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									rtfeldman$elm_css$Html$Styled$input,
+									_List_fromArray(
+										[
+											rtfeldman$elm_css$Html$Styled$Attributes$class('input'),
+											rtfeldman$elm_css$Html$Styled$Attributes$placeholder('Nom...'),
+											rtfeldman$elm_css$Html$Styled$Attributes$value(model.newLinkName),
+											rtfeldman$elm_css$Html$Styled$Events$onInput(author$project$Page$Category$EditLink)
+										]),
+									_List_Nil),
+									A2(
+									rtfeldman$elm_css$Html$Styled$span,
+									_List_fromArray(
+										[
+											rtfeldman$elm_css$Html$Styled$Attributes$css(
+											_List_fromArray(
+												[author$project$Style$create]))
+										]),
+									_List_fromArray(
+										[
+											A2(
+											rtfeldman$elm_css$Html$Styled$a,
+											_List_fromArray(
+												[
+													rtfeldman$elm_css$Html$Styled$Attributes$class('button is-primary is-rounded'),
+													rtfeldman$elm_css$Html$Styled$Events$onClick(author$project$Page$Category$AppendLink)
+												]),
+											_List_fromArray(
+												[
+													rtfeldman$elm_css$Html$Styled$text('Créer')
+												]))
+										]))
 								])),
 							A2(
 							rtfeldman$elm_css$Html$Styled$section,
@@ -10662,24 +10703,6 @@ var elm$browser$Debugger$Metadata$problemTable = _List_fromArray(
 		_Utils_Tuple2(elm$browser$Debugger$Metadata$VirtualDom, 'VirtualDom.Node'),
 		_Utils_Tuple2(elm$browser$Debugger$Metadata$VirtualDom, 'VirtualDom.Attribute')
 	]);
-var elm$core$List$maybeCons = F3(
-	function (f, mx, xs) {
-		var _n0 = f(mx);
-		if (_n0.$ === 'Just') {
-			var x = _n0.a;
-			return A2(elm$core$List$cons, x, xs);
-		} else {
-			return xs;
-		}
-	});
-var elm$core$List$filterMap = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$foldr,
-			elm$core$List$maybeCons(f),
-			_List_Nil,
-			xs);
-	});
 var elm$browser$Debugger$Metadata$findProblems = function (tipe) {
 	return A2(
 		elm$core$List$filterMap,
@@ -13117,4 +13140,4 @@ var author$project$Main$main = elm$browser$Browser$sandbox(
 		view: A2(elm$core$Basics$composeR, author$project$Main$view, rtfeldman$elm_css$Html$Styled$toUnstyled)
 	});
 _Platform_export({'Main':{'init':author$project$Main$main(
-	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Main.Msg","aliases":{},"unions":{"Main.Msg":{"args":[],"tags":{"CategoryMsg":["Page.Category.Msg"]}},"Page.Category.Msg":{"args":[],"tags":{"Edit":["String.String"],"Append":[],"Select":["Basics.Int"],"Delete":["Basics.Int"],"TogglePopup":[],"ModifyTitle":[],"Update":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
+	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Main.Msg","aliases":{},"unions":{"Main.Msg":{"args":[],"tags":{"CategoryMsg":["Page.Category.Msg"]}},"Page.Category.Msg":{"args":[],"tags":{"Edit":["String.String"],"Append":[],"Select":["Basics.Int"],"Delete":["Basics.Int"],"TogglePopup":[],"AppendLink":[],"EditLink":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));

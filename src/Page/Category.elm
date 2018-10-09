@@ -1,33 +1,38 @@
-module Page.Category exposing (Model, Msg(..), editCategory, getNumberLinks, initModel, styleCategoryModalTitle, styleHoverCategoryModalTitle, styleItemButton, styleItemOnHover, styleListCategories, update, view, viewCategories, viewCategory, viewLink, viewLinks)
+module Page.Category exposing (..)
 
 import Category exposing (Category, Link)
 import Css exposing (..)
 import Css.Global exposing (global, selector)
-import Html.Styled as HtmlStyled exposing (Html, a, button, div, footer, header, input, p, section, span, text)
+import Html.Styled as HtmlStyled exposing (Html, a, button, div, footer, header, input, p, section, span, text, label)
 import Html.Styled.Attributes exposing (attribute, class, css, id, placeholder, value)
 import Html.Styled.Events exposing (onClick, onInput)
 import Style
 
 
 type alias Model =
-    { categories : List Category
+    { categories : List CategoryModel
     , newCategoryName : String
-    , newLinkName : String
-    , selectedCategory : Maybe Category
+    -- , newLinkName : String
+    , selectedCategory : Maybe CategoryModel
     , isOnCategoryHover : Bool
     , isPopUpActive : Bool
     , id : Int
     , errors : List String
     }
 
+type alias CategoryModel =
+    { category : Category
+    , newLinkName : String
+    }
 
 type Msg
     = Edit String
     | Append
-    | Select Int
+    -- | Select Int
     | Delete Int
-    | TogglePopup
-    | AppendLink
+    | Select CategoryModel
+    -- | TogglePopup
+    | AppendLink CategoryModel
     | EditLink String
     -- | ModifyTitle
     -- | Update String
@@ -72,64 +77,100 @@ view : Model -> Html Msg
 view model =
     div []
         [ text "page category"
-        , input [ class "input", placeholder "Nom...", value model.newCategoryName, onInput Edit ] []
-        , span [ css [ Style.create ] ] [ a [ class "button is-primary is-rounded", onClick Append ] [ text "Créer" ] ]
+        , viewCategoryCreation model
         , viewCategories model.categories
-        , editCategory model
+        -- , editCategory model
         ]
 
 
-viewCategories : List Category -> Html Msg
+viewCategoryCreation : Model -> Html Msg
+viewCategoryCreation model =
+    div []
+        [ div [ class "field is-horizontal" ]
+              [ div [ class "field-body" ]
+                    [ div [ class "field" ] 
+                          [ div [ class "control"]
+                                [ input [ class "input", placeholder "Nom...", value model.newCategoryName, onInput Edit ] [] ]
+                    , div [ class "field" ]
+                          [ div [ class "control" ]
+                                [ a [ class "button is-primary", onClick Append ] [ text "Créer" ] ]
+                          ]
+                    ]
+              ]
+        ] 
+    ]
+    
+
+viewCategories : List CategoryModel -> Html Msg
 viewCategories categories =
     if List.isEmpty categories then
         text "Liste désespéremment vide..."
-
     else
         div [ css [ styleListCategories ] ] (List.map viewCategory categories)
 
 
-viewCategory : Category -> Html Msg
-viewCategory category =
-    div [ class "categoryItem" ]
-        [ styleItemButton
-        , styleItemOnHover
-        , a [ class "button is-link is-rounded", onClick (Select category.id) ]
-            [ text (category.name ++ getNumberLinks category.links)
-            ]
-        , a [ id "deleteCategory", class "delete is-small", onClick (Delete category.id) ] []
-        ]
-
-
-editCategory : Model -> Html Msg
-editCategory model =
-    case ( model.selectedCategory, model.isPopUpActive ) of
-        ( Just category, True ) ->
-            div [ class "modal is-active", attribute "aria-label" "Modal title" ]
-                [ div [ class "modal-background", onClick TogglePopup ]
-                    []
-                , div [ class "modal-card" ]
-                    [ header [ class "modal-card-head" ]
-                        [ div [ class "modal-card-title" ]
-                            [ div []
-                                [ if model.isOnCategoryHover then
-                                    span [ id "categoryTitleEdit" ] [ input [ class "input", placeholder "Nom...", value category.name ] [] ]
-                                  else
-                                    span [ id "categoryTitle" ] [ text category.name ]
+viewCategory : CategoryModel -> Html Msg
+viewCategory model =
+    div []
+        [ div [ class "field"]
+              [ label [ class "label" ] [ text (model.category.name ++ getNumberLinks model.category.links)] 
+              ]
+        , div [ class "field is-horizontal" ]
+              [ div [ class "field-body" ]
+                    [ div [ class "field" ]
+                          [ div [ class "control"] 
+                                [ input [ class "input is-rounded", placeholder "Lien...", onClick (Select model), onInput EditLink, value model.newLinkName ] [] 
                                 ]
-                            ]
-                        , button [ class "delete", onClick TogglePopup, attribute "aria-label" "close" ]
-                            []
-                        ]
-                    , section []
-                              [ input [ class "input", placeholder "Nom...", value model.newLinkName, onInput EditLink ] []
-                              , span [ css [ Style.create ] ] [ a [ class "button is-primary is-rounded", onClick AppendLink ] [ text "Créer" ] ]
-                              ]
-                    , section [ class "modal-card-body" ] [ viewLinks category ]
+                          ]
+                    , div [ class "field" ]
+                          [ div [ class "control" ]
+                                [ a [ class "button is-primary is-rounded", onClick (AppendLink model) ] [ text "Ajouter" ] ]
+                          ]
                     ]
-                ]
+              ]
+        , div [] [ viewLinks model.category ]
+        ]
+    
+    -- div [ class "categoryItem" ]
+    --     [ styleItemButton
+    --     , styleItemOnHover
+    --     , label [ class "button is-link is-rounded", onClick (Select category.id) ]
+    --         [ text (category.name ++ getNumberLinks category.links)
+    --         ]
+    --     , a [ id "deleteCategory", class "delete is-small", onClick (Delete category.id) ] []
+    --     ]
 
-        ( _, _ ) ->
-            text ""
+
+-- editCategory : Model -> Html Msg
+-- editCategory model =
+--     case ( model.selectedCategory, model.isPopUpActive ) of
+--         ( Just category, True ) ->
+--             div [ class "modal is-active", attribute "aria-label" "Modal title" ]
+--                 [ div [ class "modal-background", onClick TogglePopup ]
+--                     []
+--                 , div [ class "modal-card" ]
+--                     [ header [ class "modal-card-head" ]
+--                         [ div [ class "modal-card-title" ]
+--                             [ div []
+--                                 [ if model.isOnCategoryHover then
+--                                     span [ id "categoryTitleEdit" ] [ input [ class "input", placeholder "Nom...", value category.name ] [] ]
+--                                   else
+--                                     span [ id "categoryTitle" ] [ text category.name ]
+--                                 ]
+--                             ]
+--                         , button [ class "delete", onClick TogglePopup, attribute "aria-label" "close" ]
+--                             []
+--                         ]
+--                     , section []
+--                               [ input [ class "input", placeholder "Nom...", value model.newLinkName, onInput EditLink ] []
+--                               , span [ css [ Style.create ] ] [ a [ class "button is-primary is-rounded", onClick AppendLink ] [ text "Créer" ] ]
+--                               ]
+--                     , section [ class "modal-card-body" ] [ viewLinks category ]
+--                     ]
+--                 ]
+
+--         ( _, _ ) ->
+--             text ""
 
 
 viewLinks : Category -> Html Msg
@@ -154,8 +195,37 @@ update msg model =
         Edit name ->
             ( { model | newCategoryName = name }, Cmd.none )
 
+        Select categoryModel ->
+            let
+                category =
+                    List.head (List.filter (\m -> m.category.id == categoryModel.category.id) model.categories)
+            in
+            ( { model
+                | selectedCategory = category
+                , isPopUpActive = True
+              }
+            , Cmd.none
+            )
+
         EditLink name ->
-            ( { model | newLinkName = name }, Cmd.none )
+            case model.selectedCategory of
+                Nothing ->
+                    ( model, Cmd.none )
+            
+                Just categoryModel ->
+                    let
+                        category = Just { categoryModel | newLinkName = name }
+
+                        updateCategories m =
+                            if m.category.id == categoryModel.category.id then
+                                category
+                            else
+                                Just m
+
+                        categories = List.filterMap updateCategories model.categories
+                    in
+                        ( { model | selectedCategory = category
+                                  , categories = categories }, Cmd.none )
 
         -- Update name ->
         --     case model.selectedCategory of
@@ -170,66 +240,90 @@ update msg model =
                 ( model, Cmd.none )
             else
                 let
+                    category = Category model.id model.newCategoryName []
                     categories =
-                        Category model.id model.newCategoryName [] :: model.categories
+                        CategoryModel category "" :: model.categories
                 in
                 ( { model
                     | categories = categories
                     , newCategoryName = ""
+                    , selectedCategory = Nothing
                     , id = model.id + 1
                   }
                 , Cmd.none
                 )
             
-        AppendLink ->
-            case (model.selectedCategory, String.isEmpty model.newLinkName) of
-                (Just category, True) ->
-                    let
-                        links = model.newLinkName :: category.links
-                        
-                        updateCategories c =
-                            if c.id == category.id then
-                                Just { category | links = links }
-                            else
-                                Just c
-
-                        categories = List.filterMap updateCategories model.categories
-                    in
-                        ( { model | selectedCategory = Just { category | links = links }
-                                    , categories = categories
-                                    , newLinkName = ""
-                            } , Cmd.none )
-
-                (_, _) ->
-                    (model, Cmd.none)
-
-        Select id ->
+        AppendLink categoryModel ->
             let
-                category =
-                    List.head (List.filter (\cat -> cat.id == id) model.categories)
+                links = categoryModel.newLinkName :: categoryModel.category.links
+                categoryFromModel = List.head (List.filter (\m -> m.category.id == categoryModel.category.id) model.categories)
+
+            
+                updateCategories m =
+                    if m.category.id == categoryModel.category.id then
+                        let
+                            cat = categoryModel.category
+                        in
+                            Just { m | category =  { cat | links = links}
+                                     , newLinkName = ""}
+                    else
+                        Just m
+
+                categories = List.filterMap updateCategories model.categories
             in
-            ( { model
-                | selectedCategory = category
-                , isPopUpActive = True
-              }
-            , Cmd.none
-            )
+                ( { model | selectedCategory = Nothing
+                          , categories = categories
+                  } , Cmd.none )
+
+        -- AppendLink ->
+        --     case (model.selectedCategory, String.isEmpty model.newLinkName) of
+        --         (Just category, True) ->
+        --             let
+        --                 links = model.newLinkName :: category.links
+                        
+        --                 updateCategories c =
+        --                     if c.id == category.id then
+        --                         Just { category | links = links }
+        --                     else
+        --                         Just c
+
+        --                 categories = List.filterMap updateCategories model.categories
+        --             in
+        --                 ( { model | selectedCategory = Just { category | links = links }
+        --                             , categories = categories
+        --                             , newLinkName = ""
+        --                     } , Cmd.none )
+
+        --         (_, _) ->
+        --             (model, Cmd.none)
+
+        -- Select id ->
+        --     let
+        --         category =
+        --             List.head (List.filter (\cat -> cat.id == id) model.categories)
+        --     in
+        --     ( { model
+        --         | selectedCategory = category
+        --         , isPopUpActive = True
+        --       }
+        --     , Cmd.none
+        --     )
 
         Delete id ->
             let
                 categories =
-                    List.filter (\cat -> cat.id /= id) model.categories
+                    List.filter (\m -> m.category.id /= id) model.categories
             in
             ( { model | categories = categories }, Cmd.none )
 
-        TogglePopup ->
-            ( { model
-                | isPopUpActive = not model.isPopUpActive
-                , selectedCategory = Nothing
-                , isOnCategoryHover = False
-              }
-            , Cmd.none
-            )
+        -- TogglePopup ->
+        --     ( { model
+        --         | isPopUpActive = not model.isPopUpActive
+        --         , selectedCategory = Nothing
+        --         , isOnCategoryHover = False
+        --       }
+        --     , Cmd.none
+        --     )
 
         -- ModifyTitle ->
         --     ( { model | isOnCategoryHover = True }, Cmd.none )
@@ -251,7 +345,6 @@ initModel : Model
 initModel =
     { categories = []
     , newCategoryName = ""
-    , newLinkName = ""
     , selectedCategory = Nothing
     , isOnCategoryHover = False
     , isPopUpActive = False

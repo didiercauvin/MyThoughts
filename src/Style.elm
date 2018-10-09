@@ -53,4 +53,4 @@ addCss path =
 
 bulma : Html msg
 bulma =
-    addCss "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css"
+    addCss "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css"

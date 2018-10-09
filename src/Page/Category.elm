@@ -179,14 +179,13 @@ viewLinks category =
         text "Liste de liens désespéremment vide..."
     else
         div []
-            [ span [] [ text "Liste des liens" ]
-            , div [] (List.map viewLink category.links)
+            [ div [] (List.map viewLink category.links)
             ]
 
 
 viewLink : Link -> Html Msg
 viewLink link =
-    div [] [ text link ]
+    div [] [ a [] [ text link ] ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

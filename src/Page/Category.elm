@@ -57,19 +57,18 @@ styleItemOnHover =
     global [ selector ".categoryItem:hover #deleteCategory" [ display inlineBlock ] ]
 
 
-styleCategoryModalTitle : Html msg
-styleCategoryModalTitle =
+styleCategorySection : Html msg
+styleCategorySection =
     global
-        [ selector "#categoryTitleEdit" [ display none ]
-        , selector "#categoryTitle" [ display inlineBlock ]
+        [ selector "#category-title" [ display block ]
+        , selector "#category-content" [ display none ]
         ]
 
 
-styleHoverCategoryModalTitle : Html msg
-styleHoverCategoryModalTitle =
+styleToggleCategorySection : Html msg
+styleToggleCategorySection =
     global
-        [ selector ".modal-card:hover #categoryTitleEdit" [ display inlineBlock ]
-        , selector ".modal-card:hover #categoryTitle" [ display none ]
+        [ selector ".section:hover #category-content" [ display block ]
         ]
 
 
@@ -88,7 +87,7 @@ viewCategoryCreation model =
     div []
         [ div [ class "field is-horizontal" ]
               [ div [ class "field-body" ]
-                    [ div [ class "field" ] 
+                    [ div [ class "field" ]
                           [ div [ class "control"]
                                 [ input [ class "input", placeholder "Nom...", value model.newCategoryName, onInput Edit ] [] ]
                     , div [ class "field" ]
@@ -97,9 +96,9 @@ viewCategoryCreation model =
                           ]
                     ]
               ]
-        ] 
+        ]
     ]
-    
+
 
 viewCategories : List CategoryModel -> Html Msg
 viewCategories categories =
@@ -112,25 +111,34 @@ viewCategories categories =
 viewCategory : CategoryModel -> Html Msg
 viewCategory model =
     div []
-        [ div [ class "field"]
-              [ label [ class "label" ] [ text (model.category.name ++ getNumberLinks model.category.links)] 
-              ]
-        , div [ class "field is-horizontal" ]
-              [ div [ class "field-body" ]
-                    [ div [ class "field" ]
-                          [ div [ class "control"] 
-                                [ input [ class "input is-rounded", placeholder "Lien...", onClick (Select model), onInput EditLink, value model.newLinkName ] [] 
+        [ div [ class "section" ]
+            [ styleCategorySection
+        , styleToggleCategorySection
+        , div [ class "container" ]
+              [ div [ class "field", id "category-title"]
+                    [ label [ class "label" ] [ text (model.category.name ++ getNumberLinks model.category.links)]
+                    ]
+              , div [id "category-content"]
+                    [ div [ class "field is-horizontal" ]
+                          [ div [ class "field-body" ]
+                                [ div [ class "field" ]
+                                      [ div [ class "control"]
+                                            [ input [ class "input is-rounded", placeholder "Lien...", onClick (Select model), onInput EditLink, value model.newLinkName ] []
+                                            ]
+                                      ]
+                                , div [ class "field" ]
+                                    [ div [ class "control" ]
+                                            [ a [ class "button is-primary is-rounded", onClick (AppendLink model) ] [ text "Ajouter" ] ]
+                                    ]
                                 ]
                           ]
-                    , div [ class "field" ]
-                          [ div [ class "control" ]
-                                [ a [ class "button is-primary is-rounded", onClick (AppendLink model) ] [ text "Ajouter" ] ]
-                          ]
+
+                    , div [] [ viewLinks model.category ]
                     ]
-              ]
-        , div [] [ viewLinks model.category ]
+                ]
+            ]
         ]
-    
+
     -- div [ class "categoryItem" ]
     --     [ styleItemButton
     --     , styleItemOnHover
@@ -210,7 +218,7 @@ update msg model =
             case model.selectedCategory of
                 Nothing ->
                     ( model, Cmd.none )
-            
+
                 Just categoryModel ->
                     let
                         category = Just { categoryModel | newLinkName = name }
@@ -230,7 +238,7 @@ update msg model =
         --     case model.selectedCategory of
         --         Nothing ->
         --             (model, Cmd.none)
-            
+
         --         Just category ->
         --             ( { model | selectedCategory = Just { category | name = name } }, Cmd.none)
 
@@ -251,13 +259,13 @@ update msg model =
                   }
                 , Cmd.none
                 )
-            
+
         AppendLink categoryModel ->
             let
                 links = categoryModel.newLinkName :: categoryModel.category.links
                 categoryFromModel = List.head (List.filter (\m -> m.category.id == categoryModel.category.id) model.categories)
 
-            
+
                 updateCategories m =
                     if m.category.id == categoryModel.category.id then
                         let
@@ -279,7 +287,7 @@ update msg model =
         --         (Just category, True) ->
         --             let
         --                 links = model.newLinkName :: category.links
-                        
+
         --                 updateCategories c =
         --                     if c.id == category.id then
         --                         Just { category | links = links }
@@ -332,7 +340,7 @@ update msg model =
         --         category =
         --             List.head (List.filter (\cat -> cat.name == name) model.categories)
         --     in
-            
+
 
 
 getNumberLinks : List Link -> String

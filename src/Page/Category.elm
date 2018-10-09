@@ -4,7 +4,7 @@ import Category exposing (Category, Link)
 import Css exposing (..)
 import Css.Global exposing (global, selector)
 import Html.Styled as HtmlStyled exposing (Html, a, button, div, footer, header, input, p, section, span, text, label)
-import Html.Styled.Attributes exposing (attribute, class, css, id, placeholder, value)
+import Html.Styled.Attributes exposing (attribute, class, css, id, placeholder, value, href)
 import Html.Styled.Events exposing (onClick, onInput)
 import Style
 
@@ -46,6 +46,11 @@ styleListCategories =
         [ paddingTop (px 50)
         ]
 
+styleInputCategory : Style
+styleInputCategory =
+    Css.batch
+        [width (px 50)]
+
 
 styleItemButton : Html msg
 styleItemButton =
@@ -84,12 +89,13 @@ view model =
 
 viewCategoryCreation : Model -> Html Msg
 viewCategoryCreation model =
-    div []
+    div [ ]
         [ div [ class "field is-horizontal" ]
               [ div [ class "field-body" ]
                     [ div [ class "field" ]
                           [ div [ class "control"]
                                 [ input [ class "input", placeholder "Nom...", value model.newCategoryName, onInput Edit ] [] ]
+                          ]
                     , div [ class "field" ]
                           [ div [ class "control" ]
                                 [ a [ class "button is-primary", onClick Append ] [ text "Créer" ] ]
@@ -97,7 +103,7 @@ viewCategoryCreation model =
                     ]
               ]
         ]
-    ]
+
 
 
 viewCategories : List CategoryModel -> Html Msg
@@ -193,7 +199,7 @@ viewLinks category =
 
 viewLink : Link -> Html Msg
 viewLink link =
-    div [] [ a [] [ text link ] ]
+    div [] [ a [ href link ] [ text link ] ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
